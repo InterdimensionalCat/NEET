@@ -1,8 +1,7 @@
 # NEET
+# lel ez
 
 
-
-lel ez
 
 
 Ya gotta have VisualStudio 2017 community addition to use this, you also need SFML statically linked to your copy of VS2017

@@ -1,4 +1,7 @@
 # NEET
+
+Collabarative 2D game using SFML (in dev)
+
 # lel ez
 
 

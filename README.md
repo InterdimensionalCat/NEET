@@ -13,3 +13,5 @@ You could also just view all of the source code in github's text viewer, its in 
 This is in c++ so gl all you Java nerds
 
 # The .exe to run this program is in NEET/debug
+
+However in order for it to run you will need to get the folder SFMLTemplate/resources and place it in the same directory as the .exe file

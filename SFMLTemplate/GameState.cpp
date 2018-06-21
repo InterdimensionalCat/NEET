@@ -2,7 +2,7 @@
 #include "GameState.h"
 #include <algorithm>
 
-float zoom = 1.25;
+float zoom = 2;
 
 
 GameState::GameState()
@@ -21,7 +21,7 @@ void GameState::init() {
 
 	registerTileID(0xFFFFFFFF, "GrassTile");
 
-	Level* level1 = new Level(TILE_SIZE * 25, TILE_SIZE * 25, "LEVEL_F1");
+	Level* level1 = new Level(TILE_SIZE * 100, TILE_SIZE * 25, "LEVEL_F3");
 	CurrentLevel = level1;
 
 	pEngine = new BackgroundEngine(2);
@@ -34,7 +34,7 @@ void GameState::enter() {
 	camera.zoom(zoom);
 	getGameWind()->setView(camera);
 	std::vector<Entity*> entities;
-	Player* player = new Player(100, 100, "Player", 64, 128);
+	Player* player = new Player(100, 100, "Player", 128, 256);
 	CurrentLevel->player = player;
 	entities.push_back((Entity*)player);
 	CurrentLevel->populate(entities);
@@ -61,7 +61,7 @@ void GameState::draw(sf::RenderWindow* window, double interpol) {
 
 	newView.setCenter(cposX, cposY);
 	window->setView(newView);
-	sf::FloatRect renderArea(newView.getCenter(), newView.getSize());
+	sf::FloatRect renderArea(sf::Vector2f(newView.getCenter().x - WIDTH*zoom / 2 - TILE_SIZE, newView.getCenter().y - HEIGHT * zoom / 2 - TILE_SIZE), newView.getSize() + sf::Vector2f(TILE_SIZE, TILE_SIZE));
 
 	CurrentLevel->draw(window, interpol, &renderArea);
 

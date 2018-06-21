@@ -34,6 +34,7 @@ void Mob::move() { //moves the MOB
 	for (int i = 1; i <= 3; i++) {
 		for (auto t : *getGame()->CurrentLevel->tileMap->tiles) {
 			if (t == NULL) continue;
+			if (abs(pos->x - t->posX) > 256 || abs(pos->y - t->posY) > 256) continue;
 			if (t->collisionWithEntityVertical(this)) break;
 		}
 		pos->y += motion->y / 4;
@@ -72,11 +73,12 @@ void Mob::move() { //moves the MOB
 		pos->y = getGame()->CurrentLevel->sizeY - AABB->height;
 		AABB->top = getGame()->CurrentLevel->sizeY - AABB->height;
 		motion->y = 0;
+		isAerial = false;
 	}
 }
 
 void Mob::draw(sf::RenderWindow* window, double interpol) {
-	sprite.setPosition(pos->x, pos->y); //ensures that the sprite is always where the player is
+	currentAnimation->currentFrame->setPosition(pos->x, pos->y); //ensures that the sprite is always where the player is
 	Entity::draw(window, interpol);
 }
 

@@ -19,11 +19,7 @@ StateManager::~StateManager()
 
 
 void StateManager::onUpdate(float deltaTime) {
-	//std::cout << "Updating state " << menu->getName() << std::endl;
 	currentState->onUpdate(deltaTime);
-	//leftClick = false;
-	//wClick = false;
-	//sClick = false;
 }
 
 void StateManager::changeState(State* newCurrent) {
@@ -33,7 +29,6 @@ void StateManager::changeState(State* newCurrent) {
 }
 
 void StateManager::draw(sf::RenderWindow* window, double interpol) {
-	//std::cout << "Drawing state " << menu->getName() << std::endl;
 	currentState->draw(window, interpol);
 }
 

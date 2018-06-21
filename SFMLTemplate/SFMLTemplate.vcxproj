@@ -153,11 +153,13 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Animation.h" />
     <ClInclude Include="BackgroundEngine.h" />
     <ClInclude Include="BackgroundLayer.h" />
     <ClInclude Include="Entity.h" />
     <ClInclude Include="EntityLivingBase.h" />
     <ClInclude Include="GameState.h" />
+    <ClInclude Include="InitAnimations.h" />
     <ClInclude Include="Level.h" />
     <ClInclude Include="MenuButton.h" />
     <ClInclude Include="MenuState.h" />
@@ -173,11 +175,13 @@
     <ClInclude Include="TileMap.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Animation.cpp" />
     <ClCompile Include="BackgroundEngine.cpp" />
     <ClCompile Include="BackgroundLayer.cpp" />
     <ClCompile Include="Entity.cpp" />
     <ClCompile Include="EntityLivingBase.cpp" />
     <ClCompile Include="GameState.cpp" />
+    <ClCompile Include="InitAnimations.cpp" />
     <ClCompile Include="Level.cpp" />
     <ClCompile Include="MenuButton.cpp" />
     <ClCompile Include="MenuState.cpp" />

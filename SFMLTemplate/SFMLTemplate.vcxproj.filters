@@ -25,6 +25,12 @@
     <Filter Include="Source Files\World">
       <UniqueIdentifier>{99ec152c-01f4-4da1-aa27-bb265eb693aa}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Graphics">
+      <UniqueIdentifier>{a3289857-4c06-4abc-a637-ae47b2be2924}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Init">
+      <UniqueIdentifier>{7b29c533-ef52-4dd2-bb9e-06099c4b9f73}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h">
@@ -81,6 +87,12 @@
     <ClInclude Include="BackgroundLayer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Animation.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="InitAnimations.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -126,10 +138,16 @@
       <Filter>Source Files\World</Filter>
     </ClCompile>
     <ClCompile Include="BackgroundEngine.cpp">
-      <Filter>Source Files\State</Filter>
+      <Filter>Source Files\Graphics</Filter>
     </ClCompile>
     <ClCompile Include="BackgroundLayer.cpp">
-      <Filter>Source Files\State</Filter>
+      <Filter>Source Files\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="Animation.cpp">
+      <Filter>Source Files\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="InitAnimations.cpp">
+      <Filter>Source Files\Init</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

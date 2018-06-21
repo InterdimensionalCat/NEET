@@ -6,7 +6,7 @@
 
 MenuState::MenuState()
 {
-	//init();
+
 }
 
 
@@ -63,6 +63,8 @@ void MenuState::init() {
 	for (MenuButton* b : options) {
 		b->init();
 	}
+	currentSelection = 0;
+	options[0]->selected = true;
 }
 
 void MenuState::enter() {

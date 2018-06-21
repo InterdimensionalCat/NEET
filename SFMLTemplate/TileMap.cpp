@@ -25,18 +25,19 @@ Tile* TileMap::getTile(int x, int y) { //x and y are IN TILES | NB: this WILL re
 	if (x < 0 || x >= sizeX || y < 0 || y >= sizeY) {
 		return NULL;
 	} else {
-		return tiles->at(x + y * sizeY);
+		return tiles->at(x + y * sizeX);
 	}
 }
 
 void TileMap::setTile(Tile* tile) {
-	tiles->at(toTiles(tile->posX) + toTiles(tile->posY) * sizeY) = tile;
+	tiles->at(toTiles(tile->posX) + toTiles(tile->posY) * sizeX) = tile;
 	//std::cout << "Tiles loaded" << std::endl;
 }
 
 void TileMap::draw(sf::RenderWindow* window, double interpol, sf::FloatRect* renderArea) {
 	for (auto t : *tiles) {
 		if (t == NULL) continue;
+		if (!renderArea->contains(sf::Vector2f(t->posX, t->posY))) continue;
 		t->draw(window, interpol);
 	}
 }
@@ -63,6 +64,9 @@ void TileMap::load(std::string name) {
 			std::string* tileName = getNameFromID(id.toInteger());
 
 			if (tileName != NULL) {
+
+				std::cout << x << " " << y << std::endl;
+
 				setTile(new Tile(x*(float)TILE_SIZE, (float)y*TILE_SIZE, *tileName));
 			}
 

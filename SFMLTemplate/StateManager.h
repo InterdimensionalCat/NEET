@@ -17,7 +17,4 @@ public:
 	bool isButtonPressed(sf::Mouse::Button button);
 	std::vector<sf::Keyboard::Key> pressedKeys;
 	std::vector<sf::Mouse::Button> pressedButtons;
-	//bool leftClick;
-	//bool wClick;
-	//bool sClick;
 };

@@ -3,7 +3,7 @@
 
 
 //Entities are data structures that are instantiated and perfrom some action in the game, Entites are assumed to not move at all, and as such their texture and hitbox position do not update
-//Mobile entities (MOB's) should be instantiated as type MOB
+//Mobile entities (MOBs) should be instantiated as type MOB
 
 
 Entity::Entity(float posX, float posY, std::string textureName, float sizeX, float sizeY)
@@ -36,8 +36,7 @@ void Entity::onUpdate(float deltaTime) { //called every frame
 }
 
 void Entity::draw(sf::RenderWindow* window, double interpol) { //renders the entity to the screen
-	animate();
-	window->draw(sprite);
+	currentAnimation->draw(window, interpol);
 	if (debug) {
 		sf::RectangleShape rect(sf::Vector2f(AABB->width, AABB->height));
 		rect.setPosition(sf::Vector2f(AABB->left, AABB->top));
@@ -47,10 +46,6 @@ void Entity::draw(sf::RenderWindow* window, double interpol) { //renders the ent
 		window->draw(rect);
 
 	}
-}
-
-void Entity::animate() { //animates the entity
-
 }
 
 void Entity::setDead() { //called when the entitiy is removed from the world (but not necessasarily destroyed)

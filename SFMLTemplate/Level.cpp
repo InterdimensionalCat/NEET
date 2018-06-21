@@ -37,18 +37,16 @@ void Level::spawnEntities(Entity* spawned) {
 void Level::onUpdate(float deltaTime) {
 	for (auto e : Level::entities) {
 		e->onUpdate(deltaTime);
-		//testTile->collisionWithEntity(e);
 
 	}
 
-	//testTile->collisionWithEntity(player);
 }
 
 void Level::draw(sf::RenderWindow* window, double interpol, sf::FloatRect* renderArea) {
-	//window->draw(bg);
 
 	tileMap->draw(window, interpol, renderArea);
 	for (auto e : Level::entities) {
+		if (!renderArea->intersects(*e->AABB)) continue;
 		e->draw(window, interpol);
 	}
 }

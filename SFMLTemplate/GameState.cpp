@@ -2,7 +2,7 @@
 #include "GameState.h"
 #include <algorithm>
 
-float zoom = 2;
+float zoom = 1.5;
 
 
 GameState::GameState()
@@ -48,7 +48,7 @@ void GameState::onUpdate(float deltaTime) {
 void GameState::draw(sf::RenderWindow* window, double interpol) {
 	sf::Vector2u windowSize = window->getSize();
 	float cposX = std::max(CurrentLevel->player->pos->x + CurrentLevel->player->AABB->width / 2, (float)WIDTH / 2 * zoom);
-	float cposY = std::max(CurrentLevel->player->pos->y + CurrentLevel->player->AABB->height / 2, (float)HEIGHT / 2 * zoom);
+	float cposY = std::max(CurrentLevel->player->pos->y + CurrentLevel->player->AABB->height / 2 - 150 * zoom, (float)HEIGHT / 2 * zoom);
 	cposX = std::min(cposX, CurrentLevel->sizeX - (float)WIDTH / 2 * zoom);
 	cposY = std::min(cposY, CurrentLevel->sizeY - (float)HEIGHT / 2 * zoom);
 	sf::View newView = window->getView();
@@ -60,6 +60,7 @@ void GameState::draw(sf::RenderWindow* window, double interpol) {
 	pEngine->draw(window, interpol);
 
 	newView.setCenter(cposX, cposY);
+	//newView.setRotation(5);
 	window->setView(newView);
 	sf::FloatRect renderArea(sf::Vector2f(newView.getCenter().x - WIDTH*zoom / 2 - TILE_SIZE, newView.getCenter().y - HEIGHT * zoom / 2 - TILE_SIZE), newView.getSize() + sf::Vector2f(TILE_SIZE, TILE_SIZE));
 

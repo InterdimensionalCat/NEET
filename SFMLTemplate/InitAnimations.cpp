@@ -8,4 +8,5 @@ void InitAnimations() {
 	addAnimation(new Animation("Player_Move_Left", 128, 256, 5, 3));
 	addAnimation(new Animation("Player_TurnRun_Right", 128, 256, 15, 4));
 	addAnimation(new Animation("Player_TurnRun_Left", 128, 256, 15, 5));
+	addAnimation(new Animation("Player_Aerial", 128, 256, 2, 6));
 }

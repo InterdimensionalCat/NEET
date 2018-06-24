@@ -26,6 +26,12 @@ void Player::onUpdate(float deltaTime) {
 	AABB->left = pos->x;
 	AABB->top = pos->y;
 
+	//std::cout << isAerial << std::endl;
+
+	if (isAerial) {
+		currentAnimation = getAnimation("Player_Aerial");
+	}
+
 	switch (currentAnimation->id) {
 		case 1: //Player_Idle
 
@@ -61,7 +67,7 @@ void Player::onUpdate(float deltaTime) {
 						currentAnimation = getAnimation("Player_TurnRun_Left");
 					} else {
 						//motion->x += 150 * deltaTime;
-						std::cout << "B" << std::endl;
+						//std::cout << "B" << std::endl;
 						motion->x /= 2;
 						currentAnimation = getAnimation("Player_Idle");
 					}
@@ -90,7 +96,7 @@ void Player::onUpdate(float deltaTime) {
 						currentAnimation = getAnimation("Player_TurnRun_Right");
 					} else {
 						//motion->x += 150 * deltaTime;
-						std::cout << "A" << std::endl;
+						//std::cout << "A" << std::endl;
 						motion->x /= 2;
 						currentAnimation = getAnimation("Player_Idle");
 					}
@@ -124,6 +130,33 @@ void Player::onUpdate(float deltaTime) {
 
 			if (motion->x <= 0) {
 				currentAnimation = getAnimation("Player_Idle");
+			}
+
+			break;
+
+		case 6: //Player_Aerial
+
+			if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) {
+				motion->x += 100 * deltaTime;
+			} else {
+				if (sf::Keyboard::isKeyPressed(sf::Keyboard::A)) {
+					motion->x -= 100 * deltaTime;
+				} else {
+					std::cout << motion->x << std::endl;
+					motion->x *= 0.95;
+				}
+			}
+
+			if (!isAerial) {
+				if (motion->x > 0) {
+					currentAnimation = getAnimation("Player_Move_Left");
+				} else {
+					if (motion->x < 0) {
+						currentAnimation = getAnimation("Player_Move_Right");
+					} else {
+						currentAnimation = getAnimation("Player_Idle");
+					}
+				}
 			}
 
 			break;

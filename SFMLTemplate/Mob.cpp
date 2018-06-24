@@ -23,33 +23,61 @@ void Mob::onUpdate(float deltaTime) {
 }
 
 void Mob::move() { //moves the MOB
-	pos->x += motion->x/4;
-	pos->y += motion->y/4;
+	//pos->x += motion->x/4;
+	//pos->y += motion->y/4;
 
-	AABB->left += motion->x/4; //updates the AABB's position
-	AABB->top += motion->y/4;
+	//AABB->left += motion->x/4; //updates the AABB's position
+	//AABB->top += motion->y/4;
 
-	isAerial = true;
+	//isAerial = true;
 
-	for (int i = 1; i <= 3; i++) {
-		for (auto t : *getGame()->CurrentLevel->tileMap->tiles) {
-			if (t == NULL) continue;
-			if (abs(pos->x - t->posX) > 256 || abs(pos->y - t->posY) > 256) continue;
-			if (t->collisionWithEntityVertical(this)) break;
-		}
-		pos->y += motion->y / 4;
-		AABB->top += motion->y / 4;
+	//for (int i = 1; i <= 3; i++) {
+	//	for (auto t : *getGame()->CurrentLevel->tileMap->tiles) {
+	//		if (t == NULL) continue;
+	//		if (abs(pos->x - t->posX) > 256 || abs(pos->y - t->posY) > 256) continue;
+	//		if (t->collisionWithEntityVertical(this)) break;
+	//	}
+	//	pos->y += motion->y / 4;
+	//	AABB->top += motion->y / 4;
+	//}
+
+	//pos->y += motion->y;
+	AABB->top += motion->y;
+	//pos->x += motion->x;
+	AABB->left += motion->x;
+
+	*pos += *motion;
+	//AABB->left = motion->x;
+	//AABB->top = motion->y;
+
+	bool horizontalCollision = false;
+
+	for (auto t : *getGame()->CurrentLevel->tileMap->tiles) {
+		if (t == NULL) continue;
+		if (abs(pos->x - t->posX) > 256 || abs(pos->y - t->posY) > 256) continue;
+		horizontalCollision = t->collisionWithEntityVertical(this);
+		if (horizontalCollision) break;
 	}
 
-	for (int i = 1; i <= 3; i++) {
-		for (auto t : *getGame()->CurrentLevel->tileMap->tiles) {
-			if (t == NULL) continue;
-			if (t->collisionWithEntityHorizontal(this)) break;
-		}
-
-		pos->x += motion->x / 4;
-		AABB->left += motion->x / 4;
+	if (!horizontalCollision) {
+		isAerial = true;
 	}
+
+	for (auto t : *getGame()->CurrentLevel->tileMap->tiles) {
+		if (t == NULL) continue;
+		if (abs(pos->x - t->posX) > 256 || abs(pos->y - t->posY) > 256) continue;
+		if (t->collisionWithEntityHorizontal(this)) break;
+	}
+
+	//for (int i = 1; i <= 3; i++) {
+	//	for (auto t : *getGame()->CurrentLevel->tileMap->tiles) {
+	//		if (t == NULL) continue;
+	//		if (t->collisionWithEntityHorizontal(this)) break;
+	//	}
+
+	//	pos->x += motion->x / 4;
+	//	AABB->left += motion->x / 4;
+	//}
 
 	if (pos->x < 0) {
 		pos->x = 0;

@@ -41,6 +41,7 @@ bool EntityLivingBase::onVerticalCollision(sf::FloatRect intersectRect, Tile* ti
 	if (pos->y >= tileIn->posY) {
 		if (intersectRect.height <= 1) return false;
 		pos->y += intersectRect.height - 1;
+		isAerial = true;
 	} else {
 		if (intersectRect.height <= 1) return false;
 		isAerial = false;

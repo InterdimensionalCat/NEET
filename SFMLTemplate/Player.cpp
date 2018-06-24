@@ -60,8 +60,7 @@ void Player::onUpdate(float deltaTime) {
 
 			if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) {
 				motion->x += 50 * deltaTime;
-			}
-			else {
+			} else {
 				if (sf::Keyboard::isKeyPressed(sf::Keyboard::A)) {
 					if (abs(motion->x) >= maxSpeedX) {
 						currentAnimation = getAnimation("Player_TurnRun_Left");

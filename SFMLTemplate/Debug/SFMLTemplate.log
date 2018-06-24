@@ -1,3 +1,3 @@
 ﻿  Player.cpp
-c:\users\bennett\desktop\sfml\sfmltemplate\sfmltemplate\player.cpp(146): warning C4305: '*=': truncation from 'double' to 'float'
+c:\users\bennett\desktop\sfml\sfmltemplate\sfmltemplate\player.cpp(145): warning C4305: '*=': truncation from 'double' to 'float'
   SFMLTemplate.vcxproj -> C:\Users\bennett\Desktop\SFML\SFMLTemplate\Debug\SFMLTemplate.exe

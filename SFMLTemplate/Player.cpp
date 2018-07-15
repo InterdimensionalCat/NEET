@@ -23,12 +23,6 @@ void Player::onUpdate(float deltaTime) {
 
 	currentAnimation->currentFrame->setPosition(*pos);
 
-	//std::cout << getAABB().left << " " << getAABB().top << std::endl;
-	//std::cout << AABB->left << " " << AABB->top << std::endl;
-
-	//AABB->left = pos->x;
-	//AABB->top = pos->y;
-
 	if (isAerial) {
 		currentAnimation = getAnimation("Player_Aerial", currentAnimation);
 	}
@@ -156,43 +150,6 @@ void Player::onUpdate(float deltaTime) {
 
 			break;
 	}
-
-	//if (sf::Keyboard::isKeyPressed(sf::Keyboard::W)) {
-	//	motion->y -= 3;
-	//} else {
-	//	if (sf::Keyboard::isKeyPressed(sf::Keyboard::S)) {
-	//		motion->y += 3;
-	//	} else {
-	//		if (abs(motion->y) < 1) {
-	//			motion->y = 0;
-	//		}
-	//	}
-	//}
-
-	//if (sf::Keyboard::isKeyPressed(sf::Keyboard::A)) {
-	//	if (motion->x > 0 && motion->x < maxSpeedX * 2 / 3) {
-	//		std::cout << "turnRun" << std::endl;
-	//		motion->x = 0;
-	//	} else {
-	//		motion->x -= 75 * deltaTime;
-	//	}
-
-	//} else {
-	//	if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) {
-
-	//		if (motion->x < 0 && motion->x > -maxSpeedX * 2 / 3) {
-	//			std::cout << "turnRun" << std::endl;
-	//			motion->x = 0;
-	//		} else {
-	//			motion->x += 75 * deltaTime;
-	//		}
-	//	} else {
-	//		motion->x /= (float)1.1;
-	//		if (abs(motion->x) < 1) {
-	//			motion->x = 0;
-	//		}
-	//	}
-	//}
 
 	if (motion->x > maxSpeedX) {
 		motion->x = maxSpeedX;

@@ -8,9 +8,7 @@
 BackgroundLayer::BackgroundLayer(uint16_t id)
 {
 	texture = new sf::Texture();
-	if (!texture->loadFromFile(GetCurrentWorkingDir() + "\\resources\\background_" + std::to_string(id) + ".png")) {
-		std::cout << "COULD NOT LOAD IMAGE" << std::endl;
-	}
+	texture->loadFromFile(GetCurrentWorkingDir() + "\\resources\\background_" + std::to_string(id) + ".png");
 
 	layer1 = new sf::Sprite();
 

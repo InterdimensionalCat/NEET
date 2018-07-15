@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "MenuState.h"
 #include "MenuButton.h"
-#include "SFMLTemplate.h"
+#include "Game.h"
 #include <iostream>
 
 MenuState::MenuState()

@@ -1,0 +1,123 @@
+void Mob::move() { //moves the MOB
+	//pos->x += motion->x/4;
+	//pos->y += motion->y/4;
+
+	//AABB->left += motion->x/4; //updates the AABB's position
+	//AABB->top += motion->y/4;
+
+	//isAerial = true;
+
+	//for (int i = 1; i <= 3; i++) {
+	//	for (auto t : *getGame()->CurrentLevel->tileMap->tiles) {
+	//		if (t == NULL) continue;
+	//		if (abs(pos->x - t->posX) > 256 || abs(pos->y - t->posY) > 256) continue;
+	//		if (t->collisionWithEntityVertical(this)) break;
+	//	}
+	//	pos->y += motion->y / 4;
+	//	AABB->top += motion->y / 4;
+	//}
+
+	//pos->y += motion->y;
+	//AABB->top += motion->y;
+	//pos->x += motion->x;
+	//AABB->left += motion->x;
+
+	*pos += *motion;
+
+	currentAnimation->currentFrame->setPosition(*pos);
+
+	std::vector<sf::FloatRect*> checkTiles;
+
+	//AABB->left = motion->x;
+	//AABB->top = motion->y;
+
+	bool horizontalcollision = false;
+
+	for (auto t : *getGame()->CurrentLevel->tileMap->tiles) {
+		if (t == NULL) continue;
+		if (abs(pos->x - t->posX) > 256 || abs(pos->y - t->posY) > 256) continue;
+		horizontalcollision = t->collisionWithEntityVertical(this);
+		if (horizontalcollision) break;
+	}
+
+	if (!horizontalcollision) {
+		isAerial = true;
+	}
+
+	for (auto t : *getGame()->CurrentLevel->tileMap->tiles) {
+		if (t == NULL) continue;
+		if (abs(pos->x - t->posX) > 256 || abs(pos->y - t->posY) > 256) continue;
+		if (t->collisionWithEntityHorizontal(this)) break;
+	}
+
+//	for (auto t : *getGame()->CurrentLevel->tileMap->tiles) {
+//		sf::FloatRect* intersectRect;
+//		if (t == NULL) continue;
+//		if (abs(pos->x - t->posX) > 256 || abs(pos->y - t->posY) > 256) continue;
+//		intersectRect = t->entityCollision(this);
+//		if (intersectRect != NULL) {
+//			checkTiles.push_back(intersectRect);
+//		}
+//	}
+
+//	int index = 0;
+
+//	for (int i = 1; i < checkTiles.size(); i++) {
+//		if (checkTiles.at(i)->height *checkTiles.at(i)->width > checkTiles.at(index)->width * checkTiles.at(index)->height) {
+//			index = i;
+//		}
+//	}
+
+//	if (checkTiles.size() > 0) {
+//		onCollision(*checkTiles.at(index));
+//	}
+
+
+	//for (int i = 1; i <= 3; i++) {
+	//	for (auto t : *getGame()->CurrentLevel->tileMap->tiles) {
+	//		if (t == NULL) continue;
+	//		if (t->collisionWithEntityHorizontal(this)) break;
+	//	}
+
+	//	pos->x += motion->x / 4;
+	//	AABB->left += motion->x / 4;
+	//}
+
+	if (pos->x < 0) {
+		pos->x = 0;
+		//AABB->left = 0;
+
+		currentAnimation->currentFrame->setPosition(*pos);
+
+		motion->x = 0;
+	}
+
+	if (pos->x + AABB->width > getGame()->CurrentLevel->sizeX) {
+		pos->x = getGame()->CurrentLevel->sizeX - AABB->width;
+		//AABB->left = getGame()->CurrentLevel->sizeX - AABB->width;
+
+		currentAnimation->currentFrame->setPosition(*pos);
+
+		motion->x = 0;
+	}
+
+	if (pos->y < 0) {
+		pos->y = 0;
+		//AABB->top = 0;
+
+		currentAnimation->currentFrame->setPosition(*pos);
+
+
+		motion->y = 0;
+	}
+
+	if (pos->y + AABB->height > getGame()->CurrentLevel->sizeY) {
+		pos->y = getGame()->CurrentLevel->sizeY - AABB->height;
+		//AABB->top = getGame()->CurrentLevel->sizeY - AABB->height;
+
+		currentAnimation->currentFrame->setPosition(*pos);
+
+		motion->y = 0;
+		isAerial = false;
+	}
+}

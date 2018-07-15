@@ -1,9 +1,11 @@
 #pragma once
 
 #include <SFML\Graphics.hpp>
-#include "SFMLTemplate.h"
+#include "Game.h"
 #include <unordered_map>
 #include <string>
+
+//Engine class for animating stuff
 
 class Animation
 {

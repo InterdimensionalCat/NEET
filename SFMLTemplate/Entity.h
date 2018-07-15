@@ -1,6 +1,6 @@
 #pragma once
 #include <SFML\graphics.hpp>
-#include "SFMLTemplate.h"
+#include "Game.h"
 #include <string>
 #include <iostream>
 #include "Tile.h"
@@ -11,7 +11,7 @@ class Tile;
 class Entity
 {
 public:
-	Entity(float posX, float posY, std::string textureName, float sizeX, float sizeY);
+	Entity(float posX, float posY, float sizeX, float sizeY, Animation* defaultAnimation);
 	~Entity();
 	virtual void onUpdate(float deltaTime);
 	virtual void draw(sf::RenderWindow* window, double interpol);
@@ -19,10 +19,9 @@ public:
 	virtual void setDead();
 	virtual bool onVerticalCollision(sf::FloatRect intersectRect, Tile* tileIn);
 	virtual bool onHorizontalCollision(sf::FloatRect intersectRect, Tile* tileIn);
+	virtual bool onCollision(sf::FloatRect intersectRect, Tile* tileIn);
 	sf::FloatRect* AABB;
 	sf::Vector2f* pos;
-	sf::Texture texture;
-	sf::Sprite sprite;
 	Animation* currentAnimation;
 };
 

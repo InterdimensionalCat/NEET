@@ -7,7 +7,7 @@ class Tile;
 class Mob : public Entity
 {
 public:
-	Mob(float posX, float posY, std::string textureName, float sizeX, float sizeY);
+	Mob(float posX, float posY, float sizeX, float sizeY, Animation* defaultAnimation);
 	virtual void move();
 	void virtual onUpdate(float deltaTime) override;
 	sf::Vector2f* motion;

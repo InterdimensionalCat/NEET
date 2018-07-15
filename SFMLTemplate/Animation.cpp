@@ -30,7 +30,10 @@ void Animation::draw(sf::RenderWindow* window, double interpol) {
 		advanceFrame();
 	}
 
+	sf::Vector2f pos = currentFrame->getPosition();
+	currentFrame->setPosition(ceil(pos.x), ceil(pos.y));
 	window->draw(*currentFrame);
+	currentFrame->setPosition(pos);
 }
 
 void Animation::advanceFrame() {

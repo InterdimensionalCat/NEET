@@ -1,7 +1,7 @@
 #pragma once
 
 #include <SFML\graphics.hpp>
-#include "SFMLTemplate.h"
+#include "Game.h"
 
 class BackgroundLayer
 {

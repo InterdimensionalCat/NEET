@@ -31,60 +31,74 @@ Tile* TileMap::getTile(int x, int y) { //x and y are IN TILES | NB: this WILL re
 
 void TileMap::setTile(Tile* tile) {
 	tiles->at(toTiles(tile->posX) + toTiles(tile->posY) * sizeX) = tile;
-	//std::cout << "Tiles loaded" << std::endl;
-}
-
-void TileMap::draw(sf::RenderWindow* window, double interpol, sf::FloatRect* renderArea) {
-	for (auto t : *tiles) {
-		if (t == NULL) continue;
-		if (!renderArea->contains(sf::Vector2f(t->posX, t->posY))) continue;
-		t->draw(window, interpol);
-	}
 }
 
 void TileMap::load(std::string name) {
-	//TODO: image loading using this method
 
-	//tiles->clear();
+	tileset.loadFromFile(GetCurrentWorkingDir() + "\\resources\\GrassTileset.png");
+	tileset.setSmooth(false);
+
+	vertices.setPrimitiveType(sf::Quads);
+	vertices.resize(sizeX * sizeY * 4);
 
 	sf::Image image;
 
 	image.loadFromFile(GetCurrentWorkingDir() + "\\resources\\" + name + ".png");
 
-	//const sf::Uint8* arrPixel = image.getPixelsPtr();
 	sf::Vector2u size = image.getSize();
 	int height = size.y;
 	int width = size.x;
 
+	std::vector<int> tileIDS(height*width);
+
 	for (int y = 0; y < height; y++) {
 		for (int x = 0; x < width; x++) {
-			//sf::Uint8 id = arrPixel[x + y * width];
 			sf::Color id = image.getPixel(x, y);
 
 			std::string* tileName = getNameFromID(id.toInteger());
 
 			if (tileName != NULL) {
-
-				std::cout << x << " " << y << std::endl;
-
 				setTile(new Tile(x*(float)TILE_SIZE, (float)y*TILE_SIZE, *tileName));
+				tileIDS.at(x + y * width) = 1;
+			} else {
+				tileIDS.at(x + y * width) = 0;
 			}
-
-			//if (id.toInteger() != 0x54AAF5FF) {
-				//setTile(new Tile(x*(float)TILE_SIZE, (float)y*TILE_SIZE, "GrassTile"));
-			//}
-			//std::cout << id.toInteger() << " " << 0x54AAF5FF << std::endl;
 		}
 	}
 
-	//setTile(new Tile(TILE_SIZE * 5, TILE_SIZE * 5, "GrassTile"));
-	//setTile(new Tile(TILE_SIZE * 5, TILE_SIZE * 4, "GrassTile"));
-	//setTile(new Tile(TILE_SIZE * 6, TILE_SIZE * 5, "GrassTile"));
-	//setTile(new Tile(TILE_SIZE * 7, TILE_SIZE * 5, "GrassTile"));
-	//setTile(new Tile(TILE_SIZE * 8, TILE_SIZE * 5, "GrassTile"));
-	//setTile(new Tile(TILE_SIZE * 8, TILE_SIZE * 4, "GrassTile"));
+	for (int i = 0; i < width; ++i)
+		for (int j = 0; j < height; ++j)
+		{
+			// get the current tile number
+			int tileNumber = tileIDS[i + j * width];
 
-	std::cout << "Tiles loaded" << std::endl;
+			//if (tileNumber < 0) continue;
+
+			// find its position in the tileset texture
+			int tu = ceil(tileNumber % (tileset.getSize().x / TILE_SIZE));
+			int tv = ceil(tileNumber / (tileset.getSize().x / TILE_SIZE));
+
+			// get a pointer to the current tile's quad
+			sf::Vertex* quad = &vertices[(i + j * width) * 4];
+
+			// define its 4 corners
+			quad[0].position = sf::Vector2f(ceil(i * TILE_SIZE) - 1, ceil(j * TILE_SIZE));
+			quad[1].position = sf::Vector2f(ceil((i + 1) * TILE_SIZE) + 1, ceil(j * TILE_SIZE));
+			quad[2].position = sf::Vector2f(ceil((i + 1) * TILE_SIZE) + 1, ceil((j + 1) * TILE_SIZE));
+			quad[3].position = sf::Vector2f(ceil(i * TILE_SIZE) - 1, ceil((j + 1) * TILE_SIZE));
+
+			// define its 4 texture coordinates
+			quad[0].texCoords = sf::Vector2f(ceil(tu * TILE_SIZE), ceil(tv * TILE_SIZE));
+			quad[1].texCoords = sf::Vector2f(ceil((tu + 1) * TILE_SIZE), ceil(tv * TILE_SIZE));
+			quad[2].texCoords = sf::Vector2f(ceil((tu + 1) * TILE_SIZE), ceil((tv + 1) * TILE_SIZE));
+			quad[3].texCoords = sf::Vector2f(ceil(tu * TILE_SIZE), ceil((tv + 1) * TILE_SIZE));
+
+			//for (int j = 0; j < 4; j++) {
+			//	std::cout << quad[j].texCoords.x << " " << quad[j].texCoords.y << std::endl;
+			//	std::cout << quad[j].position.x << " " << quad[j].position.y << std::endl;
+			//}
+		}
+
 }
 
 void TileMap::onUpdate(float deltaTime) {
@@ -109,4 +123,10 @@ std::string* getNameFromID(int id) {
 	} else {
 		return NULL;
 	}
+}
+void TileMap::draw(sf::RenderTarget &target, sf::RenderStates states) const
+{
+	states.transform *= getTransform();
+	states.texture = &tileset;
+	target.draw(vertices, states);
 }

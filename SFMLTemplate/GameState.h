@@ -1,7 +1,7 @@
 #pragma once
 #include "State.h"
 #include "Level.h"
-#include "SFMLTemplate.h"
+#include "Game.h"
 #include "Entity.h"
 #include "Player.h"
 #include "BackgroundEngine.h"

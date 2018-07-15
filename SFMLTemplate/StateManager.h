@@ -4,6 +4,8 @@
 #include <algorithm>
 #include "MenuState.h"
 
+//The StateManager class manages the different states of the game(MenuState, GameState, potentially an interface or overworld state eventually)
+
 class StateManager {
 public:
 	StateManager();

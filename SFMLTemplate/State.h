@@ -3,6 +3,8 @@
 #include <string>
 #include <SFML\Graphics.hpp>
 
+//The State class is essentially an interface: it is never meant to be instantiated on its own, it is inherited by all other state types
+
 class State
 {
 public:

@@ -6,19 +6,12 @@
 //Mobile entities (MOBs) should be instantiated as type MOB
 
 
-Entity::Entity(float posX, float posY, std::string textureName, float sizeX, float sizeY)
+Entity::Entity(float posX, float posY, float sizeX, float sizeY, Animation* defaultAnimation)
 {
-	if (!texture.loadFromFile(GetCurrentWorkingDir() + "\\resources\\" + textureName + ".png")) {
-		std::cout << "COULD NOT LOAD IMAGE" << std::endl;
-	}
-
-	sprite.setTexture(texture);
-	sprite.setPosition(sf::Vector2f(posX, posY));
-
-	AABB = new sf::FloatRect(posX, posY, sizeX, sizeY);
-
-
+	currentAnimation = defaultAnimation;
+	currentAnimation->currentFrame->setPosition(posX, posY);
 	pos = new sf::Vector2f(posX, posY);
+	AABB = new sf::FloatRect(pos->x, pos->y, sizeX, sizeY);
 }
 
 
@@ -57,5 +50,9 @@ bool Entity::onVerticalCollision(sf::FloatRect intersectRect, Tile* tileIn) {
 }
 
 bool Entity::onHorizontalCollision(sf::FloatRect intersectRect, Tile* tileIn) {
+	return 0;
+}
+
+bool Entity::onCollision(sf::FloatRect intersectRect, Tile* tileIn) {
 	return 0;
 }

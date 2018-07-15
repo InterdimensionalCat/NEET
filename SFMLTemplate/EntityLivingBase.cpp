@@ -3,7 +3,7 @@
 
 //EntityLivingBases are Living mobs, they are assumed to move using an AI or keyboard input, EntityLivingBases are also assumed to have HP and Take damage however the actual Player should be instantiated as type player
 
-EntityLivingBase::EntityLivingBase(float posX, float posY, std::string textureName, float sizeX, float sizeY, int hitpoints) : Mob(posX, posY, textureName, sizeX, sizeY)
+EntityLivingBase::EntityLivingBase(float posX, float posY, float sizeX, float sizeY, int hitpoints, Animation* defaultAnimation) : Mob(posX, posY, sizeX, sizeY, defaultAnimation)
 {
 	EntityLivingBase::hitpoints = hitpoints;
 	maxHitPoints = hitpoints;
@@ -38,41 +38,60 @@ void EntityLivingBase::onUpdate(float deltaTime) {
 }
 
 bool EntityLivingBase::onVerticalCollision(sf::FloatRect intersectRect, Tile* tileIn) {
+
+	if (intersectRect.height * intersectRect.width < 10) return false;
+
 	if (pos->y >= tileIn->posY) {
-		if (intersectRect.height <= 1) return false;
-		pos->y += intersectRect.height - 1;
+		//if (intersectRect.height <= 1) return false;
+		pos->y += intersectRect.height;
 		isAerial = true;
 	} else {
-		if (intersectRect.height <= 1) return false;
+		//if (intersectRect.height <= 1) return false;
 		isAerial = false;
-		pos->y -= intersectRect.height - 1;
+		pos->y -= intersectRect.height;
 	}
 
-	AABB->top = pos->y;
+	//AABB->top = pos->y;
+
+	currentAnimation->currentFrame->setPosition(*pos);
 
 	motion->y = 0;
 
 	return false;
 	}
 
+bool EntityLivingBase::onCollision(sf::FloatRect intersectRect, Tile* tileIn) {
+
+
+
+	return true;
+}
+
 bool EntityLivingBase::onHorizontalCollision(sf::FloatRect intersectRect, Tile* tileIn) {
+
+	if (intersectRect.height * intersectRect.width < 10) return false;
+
 	if (pos->x >= tileIn->posX) {
-		if (intersectRect.width <= 1) return false;
+		//if (intersectRect.width <= 1) return false;
 		if (isAerial) {
 			pos->x += intersectRect.width;
 		} else {
-			pos->x += intersectRect.width - 1;
+			pos->x += intersectRect.width;
 		}
 	} else {
-		if (intersectRect.width <= 1) return false;
+		//if (intersectRect.width <= 1) return false;
 		if (isAerial) {
 			pos->x -= intersectRect.width;
 		} else {
-			pos->x -= intersectRect.width - 1;
+			pos->x -= intersectRect.width;
 		}
 	}
 
-	AABB->left = pos->x;
+
+
+	//AABB->left = pos->x;
+
+	currentAnimation->currentFrame->setPosition(*pos);
 
 	motion->x = 0;
 

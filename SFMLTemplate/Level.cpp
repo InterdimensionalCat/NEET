@@ -44,7 +44,8 @@ void Level::onUpdate(float deltaTime) {
 
 void Level::draw(sf::RenderWindow* window, double interpol, sf::FloatRect* renderArea) {
 
-	tileMap->draw(window, interpol, renderArea);
+	//tileMap->draw(window, interpol, renderArea);
+	window->draw(*tileMap);
 	for (auto e : Level::entities) {
 		if (!renderArea->intersects(*e->AABB)) continue;
 		e->draw(window, interpol);

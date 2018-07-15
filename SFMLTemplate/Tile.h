@@ -20,6 +20,7 @@ public:
 	sf::Sprite sprite;
 	bool collisionWithEntityVertical(Entity* eIn);
 	bool collisionWithEntityHorizontal(Entity* eIn);
-	void draw(sf::RenderWindow* window, double interpol);
+	sf::FloatRect* entityCollision(Entity* eIn);
+	sf::FloatRect getAABB();
 };
 

@@ -17,9 +17,12 @@ GameState::~GameState()
 }
 
 void GameState::init() {
-	//REGISTER TILES FOR GAME
+
+	//Registers tiles for the game
 
 	registerTileID(0xFFFFFFFF, "GrassTile");
+
+	//Initialize the first level and the parallax engine
 
 	Level* level1 = new Level(TILE_SIZE * 100, TILE_SIZE * 25, "LEVEL_F3");
 	CurrentLevel = level1;
@@ -30,13 +33,22 @@ void GameState::init() {
 }
 
 void GameState::enter() {
-	sf::View camera(sf::FloatRect(0, 0, 1920, 1080));
+
+	//Initialize camera and set the game window to that camera
+
+	sf::View camera(sf::FloatRect(0, 0, WIDTH, HEIGHT));
 	camera.zoom(zoom);
 	getGameWind()->setView(camera);
+
+	//initialize player and add player to the first level
+
 	std::vector<Entity*> entities;
 	Player* player = new Player(100, 100, "Player", 128, 256);
 	CurrentLevel->player = player;
 	entities.push_back((Entity*)player);
+
+	//popluate the level
+
 	CurrentLevel->populate(entities);
 
 }
@@ -46,24 +58,32 @@ void GameState::onUpdate(float deltaTime) {
 }
 
 void GameState::draw(sf::RenderWindow* window, double interpol) {
+
+	//moves the camera so that the player is near the middle of the screen (slightly below) 
+	//unless the player hits the border, then the camera will not scroll out of bounds
+	//the zoom factor is taken into account when calculating the camera to allow for variable zooming
+
 	sf::Vector2u windowSize = window->getSize();
 	float cposX = std::max(CurrentLevel->player->pos->x + CurrentLevel->player->AABB->width / 2, (float)WIDTH / 2 * zoom);
 	float cposY = std::max(CurrentLevel->player->pos->y + CurrentLevel->player->AABB->height / 2 - 150 * zoom, (float)HEIGHT / 2 * zoom);
 	cposX = std::min(cposX, CurrentLevel->sizeX - (float)WIDTH / 2 * zoom);
 	cposY = std::min(cposY, CurrentLevel->sizeY - (float)HEIGHT / 2 * zoom);
+	ceil(cposX);
+	ceil(cposY);
 	sf::View newView = window->getView();
-
 	window->setView(window->getDefaultView());
-	sf::Vector2f pMovement(cposX - newView.getCenter().x, cposY - newView.getCenter().y);
+	sf::Vector2f pMovement(ceil(cposX - newView.getCenter().x), ceil(cposY - newView.getCenter().y));
+
+	//updates the parallax background to move as the viewport moves
 
 	pEngine->move(pMovement);
 	pEngine->draw(window, interpol);
-
 	newView.setCenter(cposX, cposY);
-	//newView.setRotation(5);
 	window->setView(newView);
-	sf::FloatRect renderArea(sf::Vector2f(newView.getCenter().x - WIDTH*zoom / 2 - TILE_SIZE, newView.getCenter().y - HEIGHT * zoom / 2 - TILE_SIZE), newView.getSize() + sf::Vector2f(TILE_SIZE, TILE_SIZE));
 
+	//draws the level: note that anything out side the calculated renderArea will not be drawn.
+
+	sf::FloatRect renderArea(sf::Vector2f(newView.getCenter().x - WIDTH*zoom / 2 - TILE_SIZE, newView.getCenter().y - HEIGHT * zoom / 2 - TILE_SIZE), newView.getSize() + sf::Vector2f(TILE_SIZE, TILE_SIZE));
 	CurrentLevel->draw(window, interpol, &renderArea);
 
 }

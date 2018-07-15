@@ -1,14 +1,15 @@
 #include "stdafx.h"
 #include "Mob.h"
-#include "SFMLTemplate.h"
+#include "Game.h"
 #include "GameState.h"
 
 //a MOB (Mobile Entity) is an Entity with movement capabilities, it is assumed that a mob is not controllable by the player, nor is it an NPC
 //Living MOB's should be instantiated as the type EntityLivingBase
 
-Mob::Mob(float posX, float posY, std::string textureName, float sizeX, float sizeY) : Entity(posX, posY, textureName, sizeX, sizeY)
+Mob::Mob(float posX, float posY, float sizeX, float sizeY, Animation* defaultAnimation) : Entity(posX, posY, sizeX, sizeY, defaultAnimation)
 {
 	motion = new sf::Vector2f(0, 0);
+	isAerial = true;
 }
 
 
@@ -23,86 +24,129 @@ void Mob::onUpdate(float deltaTime) {
 }
 
 void Mob::move() { //moves the MOB
-	//pos->x += motion->x/4;
-	//pos->y += motion->y/4;
 
-	//AABB->left += motion->x/4; //updates the AABB's position
-	//AABB->top += motion->y/4;
 
-	//isAerial = true;
 
-	//for (int i = 1; i <= 3; i++) {
-	//	for (auto t : *getGame()->CurrentLevel->tileMap->tiles) {
-	//		if (t == NULL) continue;
-	//		if (abs(pos->x - t->posX) > 256 || abs(pos->y - t->posY) > 256) continue;
-	//		if (t->collisionWithEntityVertical(this)) break;
-	//	}
-	//	pos->y += motion->y / 4;
-	//	AABB->top += motion->y / 4;
-	//}
+	//floor collisions
+	if (motion->y > 0||!isAerial) {
+		bool falling = true;
 
-	//pos->y += motion->y;
-	AABB->top += motion->y;
-	//pos->x += motion->x;
-	AABB->left += motion->x;
+		for (auto t : *getGame()->CurrentLevel->tileMap->tiles) {
+			if (t == NULL) continue;
+			if (abs(pos->x - t->posX) > 256 || abs(pos->y - t->posY) > 256) continue;
+			if (t->AABB->contains(pos->x + AABB->width / 2 - 24, pos->y + AABB->height)) {
+				falling = false;
+				motion->y = 0;
+				pos->y = t->posY - AABB->height;
+			}
+		}
 
-	*pos += *motion;
-	//AABB->left = motion->x;
-	//AABB->top = motion->y;
+		if (falling) {
+			for (auto t : *getGame()->CurrentLevel->tileMap->tiles) {
+				if (t == NULL) continue;
+				if (abs(pos->x - t->posX) > 256 || abs(pos->y - t->posY) > 256) continue;
+				if (t->AABB->contains(pos->x + AABB->width / 2 + 24, pos->y + AABB->height)) {
+					falling = false;
+					motion->y = 0;
+					pos->y = t->posY - AABB->height;
+				}
+			}
+		}
 
-	bool horizontalCollision = false;
+		isAerial = falling;
 
-	for (auto t : *getGame()->CurrentLevel->tileMap->tiles) {
-		if (t == NULL) continue;
-		if (abs(pos->x - t->posX) > 256 || abs(pos->y - t->posY) > 256) continue;
-		horizontalCollision = t->collisionWithEntityVertical(this);
-		if (horizontalCollision) break;
 	}
 
-	if (!horizontalCollision) {
-		isAerial = true;
+	//wall collisions
+
+	if (motion->x > 0) {
+
+		for (auto t : *getGame()->CurrentLevel->tileMap->tiles) {
+			if (t == NULL) continue;
+			if (abs(pos->x - t->posX) > 256 || abs(pos->y - t->posY) > 256) continue;
+			if (t->AABB->contains(pos->x + AABB->width, pos->y + AABB->height - 50)) {
+				motion->x = 0;
+				pos->x = t->posX - AABB->width;
+				break;
+			}
+
+			if (t->AABB->contains(pos->x + AABB->width, pos->y + 50)) {
+				motion->x = 0;
+				pos->x = t->posX - AABB->width;
+				break;
+			}
+		}
+
+	} else {
+		for (auto t : *getGame()->CurrentLevel->tileMap->tiles) {
+			if (t == NULL) continue;
+			if (abs(pos->x - t->posX) > 256 || abs(pos->y - t->posY) > 256) continue;
+
+			if (t->AABB->contains(pos->x, pos->y + AABB->height - 50)) {
+				motion->x = 0;
+				pos->x = t->posX + t->AABB->width;
+				break;
+			}
+
+			if (t->AABB->contains(pos->x, pos->y + 50)) {
+				motion->x = 0;
+				pos->x = t->posX + t->AABB->width;
+				break;
+			}
+		}
 	}
 
-	for (auto t : *getGame()->CurrentLevel->tileMap->tiles) {
-		if (t == NULL) continue;
-		if (abs(pos->x - t->posX) > 256 || abs(pos->y - t->posY) > 256) continue;
-		if (t->collisionWithEntityHorizontal(this)) break;
+	//Ceiling Collisions
+	if (motion->y < 0) {
+		for (auto t : *getGame()->CurrentLevel->tileMap->tiles) {
+			if (t == NULL) continue;
+			if (abs(pos->x - t->posX) > 256 || abs(pos->y - t->posY) > 256) continue;
+			if (t->AABB->contains(pos->x + AABB->width / 2, pos->y)) {
+				motion->y = 0;
+				pos->y = t->posY + t->AABB->height;
+			}
+		}
 	}
-
-	//for (int i = 1; i <= 3; i++) {
-	//	for (auto t : *getGame()->CurrentLevel->tileMap->tiles) {
-	//		if (t == NULL) continue;
-	//		if (t->collisionWithEntityHorizontal(this)) break;
-	//	}
-
-	//	pos->x += motion->x / 4;
-	//	AABB->left += motion->x / 4;
-	//}
 
 	if (pos->x < 0) {
 		pos->x = 0;
-		AABB->left = 0;
+
+		currentAnimation->currentFrame->setPosition(*pos);
+
 		motion->x = 0;
 	}
 
 	if (pos->x + AABB->width > getGame()->CurrentLevel->sizeX) {
 		pos->x = getGame()->CurrentLevel->sizeX - AABB->width;
-		AABB->left = getGame()->CurrentLevel->sizeX - AABB->width;
+
+		currentAnimation->currentFrame->setPosition(*pos);
+
 		motion->x = 0;
 	}
 
 	if (pos->y < 0) {
 		pos->y = 0;
-		AABB->top = 0;
+
+		currentAnimation->currentFrame->setPosition(*pos);
+
 		motion->y = 0;
 	}
 
 	if (pos->y + AABB->height > getGame()->CurrentLevel->sizeY) {
 		pos->y = getGame()->CurrentLevel->sizeY - AABB->height;
-		AABB->top = getGame()->CurrentLevel->sizeY - AABB->height;
+
+		currentAnimation->currentFrame->setPosition(*pos);
+
 		motion->y = 0;
 		isAerial = false;
 	}
+
+	pos->x += motion->x;
+	pos->y += motion->y;
+	AABB->left = pos->x;
+	AABB->top = pos->y;
+
+
 }
 
 void Mob::draw(sf::RenderWindow* window, double interpol) {

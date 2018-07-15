@@ -4,7 +4,7 @@
 #include "stdafx.h"
 #include <string>
 #include<SFML\Graphics.hpp>
-#include "SFMLTemplate.h"
+#include "Game.h"
 #include <iostream>
 class MenuState : State
 {

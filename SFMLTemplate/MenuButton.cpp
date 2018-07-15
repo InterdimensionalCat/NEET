@@ -3,7 +3,7 @@
 #include "stdafx.h"
 #include <string>
 #include<SFML\Graphics.hpp>
-#include "SFMLTemplate.h"
+#include "Game.h"
 #include <iostream>
 
 
@@ -24,12 +24,8 @@ MenuButton::MenuButton(std::string unselected, std::string selected, std::string
 
 void MenuButton::init() {
 
-	if (!unselectedTexture.loadFromFile(GetCurrentWorkingDir() + "\\resources\\" + MenuButton::Sunselected + ".png")) {
-		std::cout << "COULD NOT LOAD IMAGE" << std::endl;
-	}
-	if (!selectedTexture.loadFromFile(GetCurrentWorkingDir() + "\\resources\\" + MenuButton::Sselected + ".png")) {
-		std::cout << "COULD NOT LOAD IMAGE" << std::endl;
-	}
+	unselectedTexture.loadFromFile(GetCurrentWorkingDir() + "\\resources\\" + MenuButton::Sunselected + ".png");
+	selectedTexture.loadFromFile(GetCurrentWorkingDir() + "\\resources\\" + MenuButton::Sselected + ".png");
 
 	unselectedSprite.setTexture(unselectedTexture);
 	selectedSprite.setTexture(selectedTexture);

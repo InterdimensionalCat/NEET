@@ -23,6 +23,10 @@ public:
 	int sizeX;
 	int sizeY;
 	sf::VertexArray vertices;
+
+	sf::VertexBuffer* vertBuff;
+	sf::Vertex* vArr;
+
 	virtual void draw(sf::RenderTarget &target, sf::RenderStates states) const;
 	sf::Texture tileset;
 };

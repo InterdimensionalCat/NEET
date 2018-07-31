@@ -3,6 +3,8 @@
 
 std::unordered_map<std::string, Animation*> animationPool;
 
+//Animations work based off a spritemap : instead of actually replacing the texture each frame, the animation simply displays a different portion of the animation texture
+
 Animation::Animation(std::string textureName, int sizeX, int sizeY, uint16_t speed, int id)
 {
 	animation = new sf::Texture();
@@ -16,7 +18,6 @@ Animation::Animation(std::string textureName, int sizeX, int sizeY, uint16_t spe
 	Animation::sizeY = sizeY;
 	name = textureName;
 	Animation::id = id;
-	//addAnimation(this); //this is now done in InitAnimations.cpp
 }
 
 
@@ -25,15 +26,27 @@ Animation::~Animation()
 
 }
 
-void Animation::draw(sf::RenderWindow* window, double interpol) {
+//void Animation::draw(sf::RenderWindow* window, double interpol) {
+//	if (++frameCounter >= speed) {
+//		advanceFrame();
+//	}
+//
+//	sf::Vector2f pos = currentFrame->getPosition();
+//	currentFrame->setPosition(ceil(pos.x), ceil(pos.y));
+//	window->draw(*currentFrame);
+//	currentFrame->setPosition(pos);
+//}
+
+void Animation::onUpdate(float deltaTime) {
 	if (++frameCounter >= speed) {
 		advanceFrame();
 	}
+}
 
-	sf::Vector2f pos = currentFrame->getPosition();
-	currentFrame->setPosition(ceil(pos.x), ceil(pos.y));
-	window->draw(*currentFrame);
-	currentFrame->setPosition(pos);
+void Animation::draw(sf::RenderTarget& target, sf::RenderStates states) const
+{
+	states.transform *= getTransform();
+	target.draw(*currentFrame, states);
 }
 
 void Animation::advanceFrame() {
@@ -48,6 +61,11 @@ void Animation::advanceFrame() {
 void Animation::reset() {
 	currentFrame->setTextureRect(sf::IntRect(0, 0, sizeX, sizeY));
 }
+
+
+//////////////////////////////////////////////////////////////////
+
+
 
 void addAnimation(Animation* animation) {
 	animationPool.insert(std::make_pair(animation->name, animation));

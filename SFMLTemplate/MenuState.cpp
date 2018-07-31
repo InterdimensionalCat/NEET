@@ -12,10 +12,13 @@ MenuState::MenuState()
 
 MenuState::~MenuState()
 {
+
 }
 
 
 void MenuState::onUpdate(float deltaTime) {
+
+	//Polls keyboard and mouse to determine what button on the menu is selected
 
 	if (getManager()->isKeyPressed(sf::Keyboard::W)) {
 		currentSelection--;
@@ -42,7 +45,7 @@ void MenuState::onUpdate(float deltaTime) {
 			}
 		}
 	}
-	
+
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Enter)) {
 		select();
 	}

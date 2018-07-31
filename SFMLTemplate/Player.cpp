@@ -8,9 +8,9 @@
 
 float maxSpeedX = 35;
 
-Player::Player(float posX, float posY, std::string textureName, float sizeX, float sizeY) : EntityLivingBase(posX, posY, sizeX, sizeY, 1, getAnimation("Player_Idle"))
+Player::Player(float posX, float posY, float sizeX, float sizeY) : EntityLivingBase(posX, posY, sizeX, sizeY, 1), Animatable(getAnimation("Player_Idle"))
 {
-
+	getGame()->registerDrawable(this);
 }
 
 
@@ -168,4 +168,10 @@ void Player::onUpdate(float deltaTime) {
 	}
 
 	Mob::onUpdate(deltaTime);
+	currentAnimation->onUpdate(deltaTime);
+}
+
+void Player::draw(sf::RenderTarget &target, sf::RenderStates states) const {
+	currentAnimation->currentFrame->setPosition(*pos);
+	Animatable::draw(target, states);
 }

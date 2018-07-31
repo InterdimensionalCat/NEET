@@ -7,7 +7,7 @@
 
 //Engine class for animating stuff
 
-class Animation
+class Animation : public sf::Drawable, public sf::Transformable
 {
 public:
 	Animation(std::string textureName, int sizeX, int sizeY, uint16_t speed, int id);
@@ -15,7 +15,9 @@ public:
 	sf::Texture* animation;
 	sf::Sprite* currentFrame;
 	uint16_t speed;
-	void draw(sf::RenderWindow* window, double interpol);
+	//void draw(sf::RenderWindow* window, double interpol);
+	virtual void draw(sf::RenderTarget &target, sf::RenderStates states) const;
+	void onUpdate(float deltaTime);
 	void advanceFrame();
 	void reset();
 	uint16_t frameCounter;
@@ -24,6 +26,8 @@ public:
 	std::string name;
 	int id;
 };
+
+//animations are all pulled from the same animation pool initialized on startup, these are methods that register and give access to those animations
 
 void addAnimation(Animation* animation);
 Animation* getAnimation(std::string name);

@@ -18,9 +18,6 @@ public:
 	float posY;
 	sf::Texture texture;
 	sf::Sprite sprite;
-	bool collisionWithEntityVertical(Entity* eIn);
-	bool collisionWithEntityHorizontal(Entity* eIn);
-	sf::FloatRect* entityCollision(Entity* eIn);
 	sf::FloatRect getAABB();
 };
 

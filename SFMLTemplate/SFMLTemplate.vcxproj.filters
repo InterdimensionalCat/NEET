@@ -31,6 +31,12 @@
     <Filter Include="Source Files\Init">
       <UniqueIdentifier>{7b29c533-ef52-4dd2-bb9e-06099c4b9f73}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Entities\Guns">
+      <UniqueIdentifier>{060e5002-ab5b-4bf6-ac50-43e80ca2b52a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Entities\Projectiles">
+      <UniqueIdentifier>{5a54d78d-f99b-43f8-aa97-8500064b1215}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h">
@@ -93,6 +99,21 @@
     <ClInclude Include="Game.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="GunBase.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Animatable.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ProjectileBase.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="BasicBullet.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="BasicGun.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -148,6 +169,21 @@
     </ClCompile>
     <ClCompile Include="Game.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Animatable.cpp">
+      <Filter>Source Files\Entities</Filter>
+    </ClCompile>
+    <ClCompile Include="ProjectileBase.cpp">
+      <Filter>Source Files\Entities\Projectiles</Filter>
+    </ClCompile>
+    <ClCompile Include="GunBase.cpp">
+      <Filter>Source Files\Entities\Guns</Filter>
+    </ClCompile>
+    <ClCompile Include="BasicBullet.cpp">
+      <Filter>Source Files\Entities\Projectiles</Filter>
+    </ClCompile>
+    <ClCompile Include="BasicGun.cpp">
+      <Filter>Source Files\Entities\Guns</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

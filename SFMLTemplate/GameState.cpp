@@ -24,8 +24,10 @@ void GameState::init() {
 
 	//Initialize the first level and the parallax engine
 
-	Level* level1 = new Level(TILE_SIZE * 100, TILE_SIZE * 25, "LEVEL_F3");
+	Level* level1 = new Level(2, 1, "level1");
 	CurrentLevel = level1;
+
+	renderArea = new sf::FloatRect(0, 0, WIDTH, HEIGHT);
 
 	pEngine = new BackgroundEngine(2);
 	pEngine->layers.at(1).speed = 0.5;
@@ -43,9 +45,12 @@ void GameState::enter() {
 	//initialize player and add player to the first level
 
 	std::vector<Entity*> entities;
-	Player* player = new Player(100, 100, "Player", 128, 256);
+	Player* player = new Player(100, 100, 128, 256);
 	CurrentLevel->player = player;
 	entities.push_back((Entity*)player);
+	BasicGun* gun = new BasicGun();
+	entities.push_back((Entity*)gun);
+	CurrentLevel->addDrawable((sf::Drawable*)gun);
 
 	//popluate the level
 
@@ -83,8 +88,12 @@ void GameState::draw(sf::RenderWindow* window, double interpol) {
 
 	//draws the level: note that anything out side the calculated renderArea will not be drawn.
 
-	sf::FloatRect renderArea(sf::Vector2f(newView.getCenter().x - WIDTH*zoom / 2 - TILE_SIZE, newView.getCenter().y - HEIGHT * zoom / 2 - TILE_SIZE), newView.getSize() + sf::Vector2f(TILE_SIZE, TILE_SIZE));
-	CurrentLevel->draw(window, interpol, &renderArea);
+	sf::FloatRect windowBounds(sf::Vector2f(newView.getCenter().x - WIDTH*zoom / 2 - TILE_SIZE, newView.getCenter().y - HEIGHT * zoom / 2 - TILE_SIZE), newView.getSize() + sf::Vector2f(TILE_SIZE, TILE_SIZE));
+	renderArea->left = windowBounds.left;
+	renderArea->top = windowBounds.top;
+	renderArea->width = windowBounds.width;
+	renderArea->height = windowBounds.height;
+	CurrentLevel->draw(window, interpol, renderArea);
 
 }
 
@@ -102,4 +111,12 @@ void nextLevel() {
 
 std::string GameState::getName() {
 	return 0; //lol why is this allowed
+}
+
+void GameState::registerDrawable(sf::Drawable* target) {
+	CurrentLevel->addDrawable(target);
+}
+
+sf::FloatRect* GameState::getRenderArea() {
+	return renderArea;
 }

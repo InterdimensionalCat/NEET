@@ -153,18 +153,23 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Animatable.h" />
     <ClInclude Include="Animation.h" />
     <ClInclude Include="BackgroundEngine.h" />
     <ClInclude Include="BackgroundLayer.h" />
+    <ClInclude Include="BasicBullet.h" />
+    <ClInclude Include="BasicGun.h" />
     <ClInclude Include="Entity.h" />
     <ClInclude Include="EntityLivingBase.h" />
     <ClInclude Include="GameState.h" />
+    <ClInclude Include="GunBase.h" />
     <ClInclude Include="InitAnimations.h" />
     <ClInclude Include="Level.h" />
     <ClInclude Include="MenuButton.h" />
     <ClInclude Include="MenuState.h" />
     <ClInclude Include="Mob.h" />
     <ClInclude Include="Player.h" />
+    <ClInclude Include="ProjectileBase.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="State.h" />
@@ -175,17 +180,22 @@
     <ClInclude Include="TileMap.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Animatable.cpp" />
     <ClCompile Include="Animation.cpp" />
     <ClCompile Include="BackgroundEngine.cpp" />
     <ClCompile Include="BackgroundLayer.cpp" />
+    <ClCompile Include="BasicBullet.cpp" />
+    <ClCompile Include="BasicGun.cpp" />
     <ClCompile Include="Entity.cpp" />
     <ClCompile Include="EntityLivingBase.cpp" />
     <ClCompile Include="GameState.cpp" />
+    <ClCompile Include="GunBase.cpp" />
     <ClCompile Include="InitAnimations.cpp" />
     <ClCompile Include="Level.cpp" />
     <ClCompile Include="MenuButton.cpp" />
     <ClCompile Include="MenuState.cpp" />
     <ClCompile Include="Mob.cpp" />
+    <ClCompile Include="ProjectileBase.cpp" />
     <ClCompile Include="State.cpp" />
     <ClCompile Include="StateManager.cpp" />
     <ClCompile Include="Player.cpp" />

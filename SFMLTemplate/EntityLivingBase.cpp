@@ -1,12 +1,14 @@
 #include "stdafx.h"
 #include "EntityLivingBase.h"
+#include "GameState.h"
 
 //EntityLivingBases are Living mobs, they are assumed to move using an AI or keyboard input, EntityLivingBases are also assumed to have HP and Take damage however the actual Player should be instantiated as type player
 
-EntityLivingBase::EntityLivingBase(float posX, float posY, float sizeX, float sizeY, int hitpoints, Animation* defaultAnimation) : Mob(posX, posY, sizeX, sizeY, defaultAnimation)
+EntityLivingBase::EntityLivingBase(float posX, float posY, float sizeX, float sizeY, int hitpoints/*, Animation* defaultAnimation*/) : Mob(posX, posY, sizeX, sizeY/*, defaultAnimation*/)
 {
 	EntityLivingBase::hitpoints = hitpoints;
 	maxHitPoints = hitpoints;
+	isAerial = true;
 }
 
 
@@ -37,65 +39,117 @@ void EntityLivingBase::onUpdate(float deltaTime) {
 	Mob::onUpdate(deltaTime);
 }
 
-bool EntityLivingBase::onVerticalCollision(sf::FloatRect intersectRect, Tile* tileIn) {
+void EntityLivingBase::move() {
+	//floor collisions
+	if (motion->y > 0 || !isAerial) {
+		bool falling = true;
 
-	if (intersectRect.height * intersectRect.width < 10) return false;
+		for (auto t : *getGame()->CurrentLevel->tileMap->tiles) {
+			if (t == NULL) continue;
+			if (abs(pos->x - t->posX) > 256 || abs(pos->y - t->posY) > 256) continue;
+			if (t->AABB->contains(calculatePoints(1))) {
+				falling = false;
+				motion->y = 0;
+				pos->y = t->posY - AABB->height;
+			}
+		}
 
-	if (pos->y >= tileIn->posY) {
-		//if (intersectRect.height <= 1) return false;
-		pos->y += intersectRect.height;
-		isAerial = true;
-	} else {
-		//if (intersectRect.height <= 1) return false;
+		if (falling) {
+			for (auto t : *getGame()->CurrentLevel->tileMap->tiles) {
+				if (t == NULL) continue;
+				if (abs(pos->x - t->posX) > 256 || abs(pos->y - t->posY) > 256) continue;
+				if (t->AABB->contains(calculatePoints(2))) {
+					falling = false;
+					motion->y = 0;
+					pos->y = t->posY - AABB->height;
+				}
+			}
+		}
+
+		isAerial = falling;
+
+	}
+
+	//wall collisions
+
+	if (motion->x >= 0) {
+
+		for (auto t : *getGame()->CurrentLevel->tileMap->tiles) {
+			if (t == NULL) continue;
+			if (abs(pos->x - t->posX) > 256 || abs(pos->y - t->posY) > 256) continue;
+			if (t->AABB->contains(calculatePoints(4))) {
+				motion->x = 0;
+				pos->x = t->posX - AABB->width;
+				break;
+			}
+
+			if (t->AABB->contains(calculatePoints(6))) {
+				motion->x = 0;
+				pos->x = t->posX - AABB->width;
+				break;
+			}
+		}
+
+	}
+
+	if (motion->x <= 0) {
+		for (auto t : *getGame()->CurrentLevel->tileMap->tiles) {
+			if (t == NULL) continue;
+			if (abs(pos->x - t->posX) > 256 || abs(pos->y - t->posY) > 256) continue;
+
+			if (t->AABB->contains(calculatePoints(3))) {
+				motion->x = 0;
+				pos->x = t->posX + t->AABB->width;
+				break;
+			}
+
+			if (t->AABB->contains(calculatePoints(5))) {
+				motion->x = 0;
+				pos->x = t->posX + t->AABB->width;
+				break;
+			}
+		}
+	}
+
+	//Ceiling Collisions
+	if (motion->y < 0) {
+		for (auto t : *getGame()->CurrentLevel->tileMap->tiles) {
+			if (t == NULL) continue;
+			if (abs(pos->x - t->posX) > 256 || abs(pos->y - t->posY) > 256) continue;
+			if (t->AABB->contains(calculatePoints(7))) {
+				motion->y = 0;
+				pos->y = t->posY + t->AABB->height;
+			}
+		}
+	}
+
+	//this check is to ensure that the EntityLivingBase stays within the boundries of the level
+
+	if (pos->x < 0) {
+		pos->x = 0;
+		motion->x = 0;
+	}
+
+	if (pos->x + AABB->width > getGame()->CurrentLevel->sizeX) {
+		pos->x = getGame()->CurrentLevel->sizeX - AABB->width;
+		motion->x = 0;
+	}
+
+	if (pos->y < 0) {
+		pos->y = 0;
+		motion->y = 0;
+	}
+
+	if (pos->y + AABB->height > getGame()->CurrentLevel->sizeY) {
+		pos->y = getGame()->CurrentLevel->sizeY - AABB->height;
+		motion->y = 0;
 		isAerial = false;
-		pos->y -= intersectRect.height;
 	}
 
-	//AABB->top = pos->y;
-
-	currentAnimation->currentFrame->setPosition(*pos);
-
-	motion->y = 0;
-
-	return false;
-	}
-
-bool EntityLivingBase::onCollision(sf::FloatRect intersectRect, Tile* tileIn) {
-
-
-
-	return true;
-}
-
-bool EntityLivingBase::onHorizontalCollision(sf::FloatRect intersectRect, Tile* tileIn) {
-
-	if (intersectRect.height * intersectRect.width < 10) return false;
-
-	if (pos->x >= tileIn->posX) {
-		//if (intersectRect.width <= 1) return false;
-		if (isAerial) {
-			pos->x += intersectRect.width;
-		} else {
-			pos->x += intersectRect.width;
-		}
-	} else {
-		//if (intersectRect.width <= 1) return false;
-		if (isAerial) {
-			pos->x -= intersectRect.width;
-		} else {
-			pos->x -= intersectRect.width;
-		}
-	}
-
-
-
-	//AABB->left = pos->x;
-
-	currentAnimation->currentFrame->setPosition(*pos);
-
-	motion->x = 0;
-
-	return true;
+	pos->x += motion->x;
+	pos->y += motion->y;
+	AABB->left = pos->x;
+	AABB->top = pos->y;
 }
 
  bool EntityLivingBase::jump(float velocity) {
@@ -104,3 +158,37 @@ bool EntityLivingBase::onHorizontalCollision(sf::FloatRect intersectRect, Tile* 
 	 isAerial = true;
 	 return true;
 }
+
+ sf::Vector2f EntityLivingBase::calculatePoints(int id) {
+	 switch (id) {
+		 sf::Vector2f* vec;
+	 case 1: //Left Floor
+		 vec = new sf::Vector2f(pos->x + AABB->width / 2 - 24, pos->y + AABB->height);
+		 //sf::Transform().translate(vec->x, vec->y).rotate(rotation * 90).transformPoint(*vec);
+		 return *vec;
+	 case 2: //Right Floor
+		 vec = new sf::Vector2f(pos->x + AABB->width / 2 + 24, pos->y + AABB->height);
+		 //sf::Transform().translate(vec->x, vec->y).rotate(rotation * 90).transformPoint(*vec);
+		 return *vec;
+	 case 3: //Lower Left Wall
+		 vec = new sf::Vector2f(pos->x, pos->y + AABB->height - 50);
+		 //sf::Transform().translate(vec->x, vec->y).rotate(rotation * 90).transformPoint(*vec);
+		 return *vec;
+	 case 4: // Lower Right Wall
+		 vec = new sf::Vector2f(pos->x + AABB->width, pos->y + AABB->height - 50);
+		//sf::Transform().translate(vec->x, vec->y).rotate(rotation * 90).transformPoint(*vec);
+		 return *vec;
+	 case 5: //Upper Left Wall
+		 vec = new sf::Vector2f(pos->x, pos->y + 50);
+		 //sf::Transform().translate(vec->x, vec->y).rotate(rotation * 90).transformPoint(*vec);
+		 return *vec;
+	 case 6: //Upper Right Wall
+		 vec = new sf::Vector2f(pos->x + AABB->width, pos->y + 50);
+		 //sf::Transform().translate(vec->x, vec->y).rotate(rotation * 90).transformPoint(*vec);
+		 return *vec;
+	 case 7: //Ceiling
+		 vec = new sf::Vector2f(pos->x + AABB->width / 2, pos->y);
+		// sf::Transform().translate(vec->x, vec->y).rotate(rotation * 90).transformPoint(*vec);
+		 return *vec;
+	 }
+ }

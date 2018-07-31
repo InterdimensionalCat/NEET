@@ -4,19 +4,23 @@
 
 class Tile;
 
+//Class defines an actor that is capible of moving (a Mobile Entity), as with entity, mobs cannot be drawn to the screen
+
 class Mob : public Entity
 {
 public:
-	Mob(float posX, float posY, float sizeX, float sizeY, Animation* defaultAnimation);
+	Mob(float posX, float posY, float sizeX, float sizeY/*, Animation* defaultAnimation*/);
+	~Mob();
 	virtual void move();
-	void virtual onUpdate(float deltaTime) override;
+	virtual void onUpdate(float deltaTime) override;
 	sf::Vector2f* motion;
+	//bool isAerial	
+	//sf::FloatRect getDefaultAABB();
+	//unsigned int rotation; //can be 0, 1, 2, or 3;
 	//float motionX;
 	//float motionY;
-	bool isAerial;
-	virtual void draw(sf::RenderWindow* window, double interpol) override;
-	virtual bool onVerticalCollision(sf::FloatRect intersectRect, Tile* tileIn) override;
-	virtual bool onHorizontalCollision(sf::FloatRect intersectRect, Tile* tileIn) override;
-	~Mob();
+	//virtual void draw(sf::RenderWindow* window, double interpol) override;
+	//void rotate();
+
 };
 

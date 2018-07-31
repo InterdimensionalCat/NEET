@@ -18,7 +18,7 @@ public:
 	void exit() override;
 	void select();
 	std::string getName();
-	MenuButton* options [3];
-	int16_t currentSelection;
+	MenuButton* options [3]; //array representing the option buttons on the menu
+	int16_t currentSelection; //unsigned integer that is the index value of the current selection
 };
 

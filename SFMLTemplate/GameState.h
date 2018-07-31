@@ -5,9 +5,11 @@
 #include "Entity.h"
 #include "Player.h"
 #include "BackgroundEngine.h"
+#include "BasicGun.h"
 
 class Entity;
 class Player;
+class BasicGun;
 
 class GameState : State
 {
@@ -20,8 +22,11 @@ public:
 	void enter();
 	void draw(sf::RenderWindow* window, double interpol);
 	void exit();
+	void registerDrawable(sf::Drawable* target);
 	std::string getName();
 	float getZoom();
+	sf::FloatRect* getRenderArea();
+	sf::FloatRect* renderArea;
 	BackgroundEngine* pEngine;
 };
 

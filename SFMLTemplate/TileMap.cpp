@@ -12,6 +12,11 @@ TileMap::TileMap(const float levelWidth, const float levelHeight, std::string na
 	sizeX = toTiles(levelWidth);
 	sizeY = toTiles(levelHeight);
 	tiles = new std::vector<Tile*>(sizeX*sizeY);
+	vertBuff = new sf::VertexBuffer(sf::Quads, sf::VertexBuffer::Dynamic);
+	vArr = new sf::Vertex[sizeX*sizeY * 4];
+	for (int i = 0; i < sizeX*sizeY * 4; i++) {
+		vArr[i] = sf::Vertex();
+	}
 	load(name);
 }
 
@@ -38,8 +43,7 @@ void TileMap::load(std::string name) {
 	tileset.loadFromFile(GetCurrentWorkingDir() + "\\resources\\GrassTileset.png");
 	tileset.setSmooth(false);
 
-	vertices.setPrimitiveType(sf::Quads);
-	vertices.resize(sizeX * sizeY * 4);
+	vertBuff->create(sizeX*sizeY * 4);
 
 	sf::Image image;
 
@@ -72,14 +76,13 @@ void TileMap::load(std::string name) {
 			// get the current tile number
 			int tileNumber = tileIDS[i + j * width];
 
-			//if (tileNumber < 0) continue;
 
 			// find its position in the tileset texture
 			int tu = ceil(tileNumber % (tileset.getSize().x / TILE_SIZE));
 			int tv = ceil(tileNumber / (tileset.getSize().x / TILE_SIZE));
 
 			// get a pointer to the current tile's quad
-			sf::Vertex* quad = &vertices[(i + j * width) * 4];
+			sf::Vertex* quad = &vArr[(i + j * width) * 4];
 
 			// define its 4 corners
 			quad[0].position = sf::Vector2f(ceil(i * TILE_SIZE) - 1, ceil(j * TILE_SIZE));
@@ -92,13 +95,9 @@ void TileMap::load(std::string name) {
 			quad[1].texCoords = sf::Vector2f(ceil((tu + 1) * TILE_SIZE), ceil(tv * TILE_SIZE));
 			quad[2].texCoords = sf::Vector2f(ceil((tu + 1) * TILE_SIZE), ceil((tv + 1) * TILE_SIZE));
 			quad[3].texCoords = sf::Vector2f(ceil(tu * TILE_SIZE), ceil((tv + 1) * TILE_SIZE));
-
-			//for (int j = 0; j < 4; j++) {
-			//	std::cout << quad[j].texCoords.x << " " << quad[j].texCoords.y << std::endl;
-			//	std::cout << quad[j].position.x << " " << quad[j].position.y << std::endl;
-			//}
 		}
 
+	vertBuff->update(vArr);
 }
 
 void TileMap::onUpdate(float deltaTime) {
@@ -128,5 +127,5 @@ void TileMap::draw(sf::RenderTarget &target, sf::RenderStates states) const
 {
 	states.transform *= getTransform();
 	states.texture = &tileset;
-	target.draw(vertices, states);
+	target.draw(*vertBuff, states);
 }

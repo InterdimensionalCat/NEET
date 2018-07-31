@@ -2,6 +2,8 @@
 #include <SFML\graphics.hpp>
 #include "BackgroundLayer.h"
 
+
+
 class BackgroundLayer;
 
 class BackgroundEngine

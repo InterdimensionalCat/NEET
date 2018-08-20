@@ -7,7 +7,7 @@
 std::unordered_map<std::string, sf::Texture*> texturePool;
 uint16_t TILE_SIZE = 128;
 
-Tile::Tile(float posX, float posY, std::string textureName) {
+Tile::Tile(float posX, float posY, int id) {
 	Tile::posX = posX;
 	Tile::posY = posY;
 	Tile::AABB = new sf::FloatRect(posX, posY, TILE_SIZE, TILE_SIZE);

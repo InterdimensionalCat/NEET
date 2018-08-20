@@ -35,4 +35,9 @@ public:
 
 	sf::Texture bgtexture;
 	sf::Sprite bgsprite;
+
+//	Tile* getTile(int x, int y);
+	void setTile(Tile* tile);
+	void load(std::string name);
+	std::vector<Tile*>* tiles;
 };

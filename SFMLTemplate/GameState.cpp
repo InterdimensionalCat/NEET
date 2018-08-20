@@ -2,7 +2,7 @@
 #include "GameState.h"
 #include <algorithm>
 
-float zoom = 1.5;
+float zoom = 1;
 
 
 GameState::GameState()
@@ -20,11 +20,11 @@ void GameState::init() {
 
 	//Registers tiles for the game
 
-	registerTileID(0xFFFFFFFF, "GrassTile");
+	//registerTileID(0xFFFFFFFF, "GrassTile");
 
 	//Initialize the first level and the parallax engine
 
-	Level* level1 = new Level(2, 1, "level1");
+	Level* level1 = new Level(1, 1, "testLevel");
 	CurrentLevel = level1;
 
 	renderArea = new sf::FloatRect(0, 0, WIDTH, HEIGHT);

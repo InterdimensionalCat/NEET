@@ -44,7 +44,7 @@ void EntityLivingBase::move() {
 	if (motion->y > 0 || !isAerial) {
 		bool falling = true;
 
-		for (auto t : *getGame()->CurrentLevel->tileMap->tiles) {
+		for (auto t : *getGame()->CurrentLevel->tiles) {
 			if (t == NULL) continue;
 			if (abs(pos->x - t->posX) > 256 || abs(pos->y - t->posY) > 256) continue;
 			if (t->AABB->contains(calculatePoints(1))) {
@@ -55,7 +55,7 @@ void EntityLivingBase::move() {
 		}
 
 		if (falling) {
-			for (auto t : *getGame()->CurrentLevel->tileMap->tiles) {
+			for (auto t : *getGame()->CurrentLevel->tiles) {
 				if (t == NULL) continue;
 				if (abs(pos->x - t->posX) > 256 || abs(pos->y - t->posY) > 256) continue;
 				if (t->AABB->contains(calculatePoints(2))) {
@@ -74,7 +74,7 @@ void EntityLivingBase::move() {
 
 	if (motion->x >= 0) {
 
-		for (auto t : *getGame()->CurrentLevel->tileMap->tiles) {
+		for (auto t : *getGame()->CurrentLevel->tiles) {
 			if (t == NULL) continue;
 			if (abs(pos->x - t->posX) > 256 || abs(pos->y - t->posY) > 256) continue;
 			if (t->AABB->contains(calculatePoints(4))) {
@@ -93,7 +93,7 @@ void EntityLivingBase::move() {
 	}
 
 	if (motion->x <= 0) {
-		for (auto t : *getGame()->CurrentLevel->tileMap->tiles) {
+		for (auto t : *getGame()->CurrentLevel->tiles) {
 			if (t == NULL) continue;
 			if (abs(pos->x - t->posX) > 256 || abs(pos->y - t->posY) > 256) continue;
 
@@ -113,7 +113,7 @@ void EntityLivingBase::move() {
 
 	//Ceiling Collisions
 	if (motion->y < 0) {
-		for (auto t : *getGame()->CurrentLevel->tileMap->tiles) {
+		for (auto t : *getGame()->CurrentLevel->tiles) {
 			if (t == NULL) continue;
 			if (abs(pos->x - t->posX) > 256 || abs(pos->y - t->posY) > 256) continue;
 			if (t->AABB->contains(calculatePoints(7))) {

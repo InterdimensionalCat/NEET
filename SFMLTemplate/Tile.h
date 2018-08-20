@@ -11,7 +11,7 @@ extern uint16_t TILE_SIZE;
 class Tile
 {
 public:
-	Tile(float posX, float posY, std::string textureName);
+	Tile(float posX, float posY, int id);
 	~Tile();
 	sf::FloatRect* AABB;
 	float posX;

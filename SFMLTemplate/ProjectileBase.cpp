@@ -23,7 +23,7 @@ ProjectileBase::~ProjectileBase()
 
 void ProjectileBase::onUpdate(float deltaTime) {
 	timeActive++;
-	for (auto t : *getGame()->CurrentLevel->tileMap->tiles) {
+	for (auto t : *getGame()->CurrentLevel->tiles) {
 		if (t == NULL) continue;
 		if (t->AABB->intersects(*AABB)) {
 			setDead();

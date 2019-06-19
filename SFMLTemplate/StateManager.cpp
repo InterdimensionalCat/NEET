@@ -37,7 +37,7 @@ State* StateManager::getCurrentState() {
 	return currentState;
 }
 
-//these two methods allow single button presses to be checkable in real time without messing with the message loo[ (window events are garbo)
+//these two methods allow single button presses to be checkable in real time without messing with the message loop (window events are garbo)
 
 bool StateManager::isKeyPressed(sf::Keyboard::Key key) {
 	return std::find(pressedKeys.begin(), pressedKeys.end(), key) != pressedKeys.end();

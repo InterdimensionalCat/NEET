@@ -5,17 +5,17 @@ std::unordered_map<std::string, Animation*> animationPool;
 
 //Animations work based off a spritemap : instead of actually replacing the texture each frame, the animation simply displays a different portion of the animation texture
 
-Animation::Animation(std::string textureName, int sizeX, int sizeY, uint16_t speed, int id)
+Animation::Animation(std::string textureName, int sizeX, int sizeY, uint16_t speed, int id, int maxFrames)
 {
+	maxFrame = maxFrames;
 	animation = new sf::Texture();
-	currentFrame = new sf::Sprite();
+	//currentFrame = new sf::Sprite();
 	animation->loadFromFile(GetCurrentWorkingDir() + "\\resources\\" + textureName + ".png");
-	currentFrame->setTexture(*animation);
-	currentFrame->setTextureRect(sf::IntRect(0,0,sizeX,sizeY));
+	//currentFrame->setTexture(*animation);
+	//currentFrame->setTextureRect(sf::IntRect(0,0,sizeX,sizeY));
 	Animation::speed = speed;
 	frameCounter = 0;
-	Animation::sizeX = sizeX;
-	Animation::sizeY = sizeY;
+	size = Vector2i(sizeX, sizeY);
 	name = textureName;
 	Animation::id = id;
 }
@@ -45,21 +45,25 @@ void Animation::onUpdate(float deltaTime) {
 
 void Animation::draw(sf::RenderTarget& target, sf::RenderStates states) const
 {
-	states.transform *= getTransform();
-	target.draw(*currentFrame, states);
+
+	//states.transform *= getTransform();
+	//target.draw(*currentFrame, states);
 }
 
 void Animation::advanceFrame() {
 	frameCounter = 0;
-	if (currentFrame->getTextureRect().left + sizeX > animation->getSize().x) {
-		reset();
-	} else {
-		currentFrame->setTextureRect(sf::IntRect(currentFrame->getTextureRect().left + sizeX, 0, sizeX, sizeY));
-	}
+	currentFrame = currentFrame < maxFrame - 1 ? currentFrame + 1 : 0;
+	//if (currentFrame->getTextureRect().left + sizeX > animation->getSize().x) {
+	//	reset();
+	//} else {
+	//	currentFrame->setTextureRect(sf::IntRect(currentFrame->getTextureRect().left + sizeX, 0, sizeX, sizeY));
+	//}
 }
 
 void Animation::reset() {
-	currentFrame->setTextureRect(sf::IntRect(0, 0, sizeX, sizeY));
+	//currentFrame->setTextureRect(sf::IntRect(0, 0, sizeX, sizeY));
+	currentFrame = 0;
+	frameCounter = 0;
 }
 
 

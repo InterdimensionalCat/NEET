@@ -20,6 +20,6 @@ Animatable::~Animatable()
 
 void Animatable::draw(sf::RenderTarget& target, sf::RenderStates states) const
 {
-	states.transform *= getTransform();
-	target.draw(*currentAnimation, states);
+	//states.transform *= getTransform();
+	//target.draw(*currentAnimation, states);
 }

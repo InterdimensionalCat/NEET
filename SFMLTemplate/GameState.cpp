@@ -1,8 +1,11 @@
 #include "stdafx.h"
 #include "GameState.h"
 #include <algorithm>
+#include "BasicGun.h"
+#include "ShotGun.h"
 
-float zoom = 1;
+float zoom = 2;
+
 
 
 GameState::GameState()
@@ -24,7 +27,8 @@ void GameState::init() {
 
 	//Initialize the first level and the parallax engine
 
-	Level* level1 = new Level(1, 1, "testLevel");
+	Level* level1 = new Level(3, 3, "testLevel1");
+	//Level* level1 = new Level(3, 2, "Level2");
 	CurrentLevel = level1;
 
 	renderArea = new sf::FloatRect(0, 0, WIDTH, HEIGHT);
@@ -45,11 +49,13 @@ void GameState::enter() {
 	//initialize player and add player to the first level
 
 	std::vector<Entity*> entities;
-	Player* player = new Player(100, 100, 128, 256);
+	Player* player = new Player(Vector2f(200, 200));
 	CurrentLevel->player = player;
 	entities.push_back((Entity*)player);
-	BasicGun* gun = new BasicGun();
-	entities.push_back((Entity*)gun);
+	//BasicGun* gun = new BasicGun(player->origin - player->dimensions / 2.0f);
+	ShotGun* gun = new ShotGun(player->origin - player->dimensions / 2.0f);
+	player->heldGun = gun;
+	//entities.push_back((Entity*)gun);
 	CurrentLevel->addDrawable((sf::Drawable*)gun);
 
 	//popluate the level
@@ -69,8 +75,12 @@ void GameState::draw(sf::RenderWindow* window, double interpol) {
 	//the zoom factor is taken into account when calculating the camera to allow for variable zooming
 
 	sf::Vector2u windowSize = window->getSize();
-	float cposX = std::max(CurrentLevel->player->pos->x + CurrentLevel->player->AABB->width / 2, (float)WIDTH / 2 * zoom);
-	float cposY = std::max(CurrentLevel->player->pos->y + CurrentLevel->player->AABB->height / 2 - 150 * zoom, (float)HEIGHT / 2 * zoom);
+	//float cposX = std::max(CurrentLevel->player->pos->x + CurrentLevel->player->AABB->width / 2, (float)WIDTH / 2 * zoom);
+	//float cposY = std::max(CurrentLevel->player->pos->y + CurrentLevel->player->AABB->height / 2 - 150 * zoom, (float)HEIGHT / 2 * zoom);
+
+	float cposX = std::max(CurrentLevel->player->origin.x, (float)WIDTH / 2 * zoom);
+	float cposY = std::max(CurrentLevel->player->origin.y - 150 * zoom, (float)HEIGHT / 2 * zoom);
+
 	cposX = std::min(cposX, CurrentLevel->sizeX - (float)WIDTH / 2 * zoom);
 	cposY = std::min(cposY, CurrentLevel->sizeY - (float)HEIGHT / 2 * zoom);
 	ceil(cposX);
@@ -89,10 +99,10 @@ void GameState::draw(sf::RenderWindow* window, double interpol) {
 	//draws the level: note that anything out side the calculated renderArea will not be drawn.
 
 	sf::FloatRect windowBounds(sf::Vector2f(newView.getCenter().x - WIDTH*zoom / 2 - TILE_SIZE, newView.getCenter().y - HEIGHT * zoom / 2 - TILE_SIZE), newView.getSize() + sf::Vector2f(TILE_SIZE, TILE_SIZE));
-	renderArea->left = windowBounds.left;
-	renderArea->top = windowBounds.top;
-	renderArea->width = windowBounds.width;
-	renderArea->height = windowBounds.height;
+	renderArea->left = windowBounds.left - TILE_SIZE * partitionSize;
+	renderArea->top = windowBounds.top - TILE_SIZE * partitionSize;
+	renderArea->width = windowBounds.width + TILE_SIZE * partitionSize;
+	renderArea->height = windowBounds.height + TILE_SIZE * partitionSize;
 	CurrentLevel->draw(window, interpol, renderArea);
 
 }

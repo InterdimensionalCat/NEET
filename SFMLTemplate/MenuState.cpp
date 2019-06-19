@@ -20,31 +20,31 @@ void MenuState::onUpdate(float deltaTime) {
 
 	//Polls keyboard and mouse to determine what button on the menu is selected
 
-	if (getManager()->isKeyPressed(sf::Keyboard::W)) {
-		currentSelection--;
-		if (currentSelection < 0) {
-			currentSelection = 2;
-		}
-	}
+	//if (getManager()->isKeyPressed(sf::Keyboard::W)) {
+	//	currentSelection--;
+	//	if (currentSelection < 0) {
+	//		currentSelection = 2;
+	//	}
+	//}
 
-	if (getManager()->isKeyPressed(sf::Keyboard::S)) {
-		currentSelection++;
-		if (currentSelection > 2) {
-			currentSelection = 0;
-		}
-	}
+	//if (getManager()->isKeyPressed(sf::Keyboard::S)) {
+	//	currentSelection++;
+	//	if (currentSelection > 2) {
+	//		currentSelection = 0;
+	//	}
+	//}
 
-	if (getManager()->isButtonPressed(sf::Mouse::Left))
-	{
-		sf::Vector2i mousePos = sf::Mouse::getPosition(*getGameWind());
+	//if (getManager()->isButtonPressed(sf::Mouse::Left))
+	//{
+	//	sf::Vector2i mousePos = sf::Mouse::getPosition(*getGameWind());
 
-		for (uint16_t i = 0; i < sizeof(options) / sizeof(options[0]); i++) {
-			if (options[i]->AABB.contains(mousePos)) {
-				currentSelection = i;
-				select();
-			}
-		}
-	}
+	//	for (uint16_t i = 0; i < sizeof(options) / sizeof(options[0]); i++) {
+	//		if (options[i]->AABB.contains(mousePos)) {
+	//			currentSelection = i;
+	//			select();
+	//		}
+	//	}
+	//}
 
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Enter)) {
 		select();
@@ -78,7 +78,7 @@ void MenuState::select() {
 	switch (currentSelection) {
 	case 0:
 		std::cout << "Play" << std::endl;
-		getManager()->changeState((State*)getGame());
+		/*getManager()->changeState((State*)getGame());*/
 		break;
 	case 1:
 		std::cout << "Options" << std::endl;

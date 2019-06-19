@@ -4,6 +4,8 @@
 #include "State.h"
 #include "player.h"
 #include "TileMap.h"
+#include "PhysicsEngine.h"
+#include "SpacialPartition.h"
 
 class TileMap;
 
@@ -20,8 +22,9 @@ public:
 	uint16_t id;
 	std::vector<Entity*> entities;
 	std::vector<sf::Drawable*> drawables;
-	long sizeX;
-	long sizeY;
+	float physicsTime;
+	int sizeX;
+	int sizeY;
 	void populate(std::vector<Entity*> &entities);
 	void spawnEntities(Entity* spawned);
 	void addDrawable(sf::Drawable* target);
@@ -29,15 +32,28 @@ public:
 	void draw(sf::RenderWindow* window, double interpol, sf::FloatRect* renderArea);
 	void removeEntity(Entity* removed);
 	void removeDrawable(sf::Drawable* drawable);
+	void updatePartitions();
+	Tile* getTile(int x, int y);
 
 	Player* player;
 	TileMap* tileMap;
+	PhysicsEngine* engine;
+	//Phys2* engine;
 
 	sf::Texture bgtexture;
 	sf::Sprite bgsprite;
+
+	std::vector<std::vector<SpacialPartition*>*>* partitions;
+
+	vector<vector<int>>* tileKey;
 
 //	Tile* getTile(int x, int y);
 	void setTile(Tile* tile);
 	void load(std::string name);
 	std::vector<Tile*>* tiles;
+	bool isKeyOccupied(Vector2i keyPos);
+	void correctNormals(Tile* tile);
+
 };
+
+Vector2i getKey(Vector2f position);

@@ -10,10 +10,10 @@
 class Animation : public sf::Drawable, public sf::Transformable
 {
 public:
-	Animation(std::string textureName, int sizeX, int sizeY, uint16_t speed, int id);
+	Animation(std::string textureName, int sizeX, int sizeY, uint16_t speed, int id, int maxFrames);
 	~Animation();
 	sf::Texture* animation;
-	sf::Sprite* currentFrame;
+	//sf::Sprite* currentFrame;
 	uint16_t speed;
 	//void draw(sf::RenderWindow* window, double interpol);
 	virtual void draw(sf::RenderTarget &target, sf::RenderStates states) const;
@@ -21,8 +21,11 @@ public:
 	void advanceFrame();
 	void reset();
 	uint16_t frameCounter;
-	int sizeX;
-	int sizeY;
+	uint16_t currentFrame;
+	uint16_t maxFrame;
+	//int sizeX;
+	//int sizeY;
+	sf::Vector2i size;
 	std::string name;
 	int id;
 };

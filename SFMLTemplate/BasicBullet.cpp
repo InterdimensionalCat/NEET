@@ -1,9 +1,10 @@
 #include "stdafx.h"
+#include "stdafx.h"
 #include "BasicBullet.h"
 #include <cmath>
 
 
-BasicBullet::BasicBullet(float posX, float posY, double angle) : ProjectileBase(posX, posY, 20, 20, angle, "BasicBullet")
+BasicBullet::BasicBullet(Vector2f position, float angle, Vector2f velocity) : ProjectileBase(position, Vector2f(20,20), velocity,  angle, 0.5 , 5 , "BasicBullet")
 {
 
 }
@@ -19,8 +20,6 @@ void BasicBullet::move() {
 }
 
 void BasicBullet::onUpdate(float deltaTime) {
-	motion->x = 10 * cos(angle);
-	motion->y = 10 * sin(angle);
 	ProjectileBase::onUpdate(deltaTime);
 }
 

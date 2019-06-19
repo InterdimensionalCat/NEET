@@ -5,7 +5,7 @@
 #include "Entity.h"
 #include "Player.h"
 #include "BackgroundEngine.h"
-#include "BasicGun.h"
+//#include "BasicGun.h"
 
 class Entity;
 class Player;

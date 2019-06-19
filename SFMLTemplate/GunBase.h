@@ -1,16 +1,30 @@
 #pragma once
-#include "Mob.h"
-class GunBase : public Entity, public sf::Drawable, public sf::Transformable
+#ifndef GunBase_H
+#define GunBase_H
+#include "Entity.h"
+#endif
+
+class Entity;
+
+class GunBase : public sf::Drawable, public sf::Transformable, public Entity
 {
 public:
-	GunBase(float posX, float posY, float sizeX, float sizeY, int cooldown, std::string textureName);
+	GunBase(Vector2f position, Vector2f dimensions, float rpm, float inaccuracy, float clipSize, float reloadTime, bool automatic, std::string textureName);
 	~GunBase();
-	virtual void onUpdate(float deltaTime) override;
+	virtual void onUpdate(float deltaTime, Vector2f newOrigin);
+	virtual void reload();
 	void draw(sf::RenderTarget& target, sf::RenderStates states) const;
-	virtual void shoot();
+	virtual bool shoot();
 	virtual void setDead();
-	sf::Texture* texture;
-	sf::Sprite* sprite;
-	int cooldown;
-	int maxCoolDown;
+	unsigned int dir;
+	unsigned int clipSize;
+	int currentClip;
+	float rpm;
+	float cooldownTime;
+	float inaccuracy;
+	float reloadTime;
+	float ticksReloading;
+	bool automatic;
+	Texture* texture;
+	Vector2f orign;
 };

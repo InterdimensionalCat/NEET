@@ -23,7 +23,7 @@
     <ProjectGuid>{6838BB84-294C-4CB0-9382-3A4B9F9B159C}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>SFMLTemplate</RootNamespace>
-    <WindowsTargetPlatformVersion>10.0.17134.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0.16299.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -193,8 +193,11 @@
     <ClInclude Include="StateManager.h" />
     <ClInclude Include="test.h" />
     <ClInclude Include="TestEnemy.h" />
+    <ClInclude Include="TestSquare.h" />
+    <ClInclude Include="TestSquareSprite.h" />
     <ClInclude Include="Tile.h" />
     <ClInclude Include="TileMap.h" />
+    <ClInclude Include="TransformComp.h" />
     <ClInclude Include="VecHelper.h" />
   </ItemGroup>
   <ItemGroup>
@@ -235,8 +238,11 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="TestEnemy.cpp" />
+    <ClCompile Include="TestSquare.cpp" />
+    <ClCompile Include="TestSquareSprite.cpp" />
     <ClCompile Include="Tile.cpp" />
     <ClCompile Include="TileMap.cpp" />
+    <ClCompile Include="TransformComp.cpp" />
     <ClCompile Include="VecHelper.cpp" />
   </ItemGroup>
   <ItemGroup>

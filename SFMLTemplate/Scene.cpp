@@ -24,8 +24,7 @@ void Scene::draw(RenderWindow* target) {
 	}
 }
 
-GameObject* Scene::createObject() {
-	GameObject* result = new GameObject();
+GameObject* Scene::createObject(GameObject* result) {
 	objects.push_back(result);
 	return result;
 }

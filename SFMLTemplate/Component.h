@@ -1,12 +1,18 @@
 #pragma once
+#include "GameObject.h"
+
+class GameObject;
+
 class Component
 {
 public:
 	Component(string tag);
 	~Component();
 
-	void onUpdate(float deltaTime, GameMouse* mouse, GameKeyboard* keyboard);
-	void draw(RenderWindow* target);
+	virtual void onUpdate(float deltaTime, GameMouse* mouse, GameKeyboard* keyboard);
+	virtual void draw(RenderWindow* target);
+
 	string tag;
+	GameObject* masterObj;
 };
 

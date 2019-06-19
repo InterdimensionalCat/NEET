@@ -55,9 +55,6 @@
     <Filter Include="Header Files\Physics">
       <UniqueIdentifier>{e07c553f-a781-4528-814c-9e7b9e0e67aa}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\State">
-      <UniqueIdentifier>{a46b2aed-fa13-45bc-97ec-6306de9c58bf}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Header Files\Level">
       <UniqueIdentifier>{6ce44ef0-9b27-4e05-9312-feb3729f72b2}</UniqueIdentifier>
     </Filter>
@@ -90,6 +87,9 @@
     </Filter>
     <Filter Include="Header Files\Object\Component">
       <UniqueIdentifier>{f48f2c66-119d-4337-9f42-87e1f3e01790}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\State">
+      <UniqueIdentifier>{a46b2aed-fa13-45bc-97ec-6306de9c58bf}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -142,9 +142,6 @@
       <Filter>Header Files\Graphics</Filter>
     </ClInclude>
     <ClInclude Include="PhysicsEngine.h">
-      <Filter>Header Files\Physics</Filter>
-    </ClInclude>
-    <ClInclude Include="RigidBody.h">
       <Filter>Header Files\Physics</Filter>
     </ClInclude>
     <ClInclude Include="SpacialPartition.h">
@@ -203,6 +200,18 @@
     </ClInclude>
     <ClInclude Include="SceneManager.h">
       <Filter>Header Files\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="TestSquareSprite.h">
+      <Filter>Header Files\Object\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="TransformComp.h">
+      <Filter>Header Files\Object\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="TestSquare.h">
+      <Filter>Header Files\Object</Filter>
+    </ClInclude>
+    <ClInclude Include="RigidBody.h">
+      <Filter>Header Files\Object\Component</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -275,9 +284,6 @@
     <ClCompile Include="PhysicsEngine.cpp">
       <Filter>Source Files\Physics</Filter>
     </ClCompile>
-    <ClCompile Include="RigidBody.cpp">
-      <Filter>Source Files\Physics</Filter>
-    </ClCompile>
     <ClCompile Include="SpacialPartition.cpp">
       <Filter>Source Files\Physics</Filter>
     </ClCompile>
@@ -310,6 +316,18 @@
     </ClCompile>
     <ClCompile Include="SceneManager.cpp">
       <Filter>Source Files\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="TestSquareSprite.cpp">
+      <Filter>Source Files\Object\Component</Filter>
+    </ClCompile>
+    <ClCompile Include="TransformComp.cpp">
+      <Filter>Source Files\Object\Component</Filter>
+    </ClCompile>
+    <ClCompile Include="TestSquare.cpp">
+      <Filter>Source Files\Object</Filter>
+    </ClCompile>
+    <ClCompile Include="RigidBody.cpp">
+      <Filter>Source Files\Object\Component</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

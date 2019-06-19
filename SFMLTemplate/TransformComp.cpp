@@ -16,4 +16,10 @@ void TransformComp::move(Vector2f newPos) {
 	position = newPos;
 }
 
+void TransformComp::changeShape(vector<Vector2f> points) {
+	shape = polygon(points);
+}
+
+
+
 

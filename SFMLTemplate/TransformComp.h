@@ -49,7 +49,9 @@ public:
 	TransformComp(Vector2f posIn);
 	~TransformComp();
 	void move(Vector2f newPos);
-
+	void changeShape(vector<Vector2f> points);
+	FloatRect* getMinAABB();
+	polygon shape;
 	Vector2f position;
 };
 

@@ -13,51 +13,6 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
-    <Filter Include="Source Files\Entities">
-      <UniqueIdentifier>{f3f1c64d-b364-43f4-9820-b949f040fae8}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\State">
-      <UniqueIdentifier>{025ba8f3-c93a-47b2-bf1b-4c25f7c814af}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\UserInterface">
-      <UniqueIdentifier>{13197ba0-312d-4841-b059-8ab9f4f402c1}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\World">
-      <UniqueIdentifier>{99ec152c-01f4-4da1-aa27-bb265eb693aa}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\Graphics">
-      <UniqueIdentifier>{a3289857-4c06-4abc-a637-ae47b2be2924}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\Init">
-      <UniqueIdentifier>{7b29c533-ef52-4dd2-bb9e-06099c4b9f73}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\Entities\Guns">
-      <UniqueIdentifier>{060e5002-ab5b-4bf6-ac50-43e80ca2b52a}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\Entities\Projectiles">
-      <UniqueIdentifier>{5a54d78d-f99b-43f8-aa97-8500064b1215}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\Physics">
-      <UniqueIdentifier>{06a22c65-ccdc-4b93-afb2-37f0f71b65e0}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header Files\Entities">
-      <UniqueIdentifier>{74e142c2-1b9f-4136-ad6e-34312d5d109d}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header Files\Entities\Guns">
-      <UniqueIdentifier>{aa710063-991f-4772-851a-e5d1c8345ced}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header Files\Entities\Projectiles">
-      <UniqueIdentifier>{5b8e01b5-c0a8-4d0d-bbb6-6dadb8818c8e}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header Files\Graphics">
-      <UniqueIdentifier>{cd860c91-6840-46db-8e2e-87ba33c323d3}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header Files\Physics">
-      <UniqueIdentifier>{e07c553f-a781-4528-814c-9e7b9e0e67aa}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header Files\Level">
-      <UniqueIdentifier>{6ce44ef0-9b27-4e05-9312-feb3729f72b2}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source Files\Input">
       <UniqueIdentifier>{de6f9615-3975-4bc4-b3ca-0266babd1401}</UniqueIdentifier>
     </Filter>
@@ -88,9 +43,6 @@
     <Filter Include="Header Files\Object\Component">
       <UniqueIdentifier>{f48f2c66-119d-4337-9f42-87e1f3e01790}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\State">
-      <UniqueIdentifier>{a46b2aed-fa13-45bc-97ec-6306de9c58bf}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h">
@@ -104,81 +56,6 @@
     </ClInclude>
     <ClInclude Include="Game.h">
       <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Entity.h">
-      <Filter>Header Files\Entities</Filter>
-    </ClInclude>
-    <ClInclude Include="Player.h">
-      <Filter>Header Files\Entities</Filter>
-    </ClInclude>
-    <ClInclude Include="BasicGun.h">
-      <Filter>Header Files\Entities\Guns</Filter>
-    </ClInclude>
-    <ClInclude Include="GunBase.h">
-      <Filter>Header Files\Entities\Guns</Filter>
-    </ClInclude>
-    <ClInclude Include="BasicBullet.h">
-      <Filter>Header Files\Entities\Projectiles</Filter>
-    </ClInclude>
-    <ClInclude Include="ProjectileBase.h">
-      <Filter>Header Files\Entities\Projectiles</Filter>
-    </ClInclude>
-    <ClInclude Include="Animatable.h">
-      <Filter>Header Files\Graphics</Filter>
-    </ClInclude>
-    <ClInclude Include="Animation.h">
-      <Filter>Header Files\Graphics</Filter>
-    </ClInclude>
-    <ClInclude Include="BackgroundEngine.h">
-      <Filter>Header Files\Graphics</Filter>
-    </ClInclude>
-    <ClInclude Include="BackgroundLayer.h">
-      <Filter>Header Files\Graphics</Filter>
-    </ClInclude>
-    <ClInclude Include="TileMap.h">
-      <Filter>Header Files\Graphics</Filter>
-    </ClInclude>
-    <ClInclude Include="MenuButton.h">
-      <Filter>Header Files\Graphics</Filter>
-    </ClInclude>
-    <ClInclude Include="PhysicsEngine.h">
-      <Filter>Header Files\Physics</Filter>
-    </ClInclude>
-    <ClInclude Include="SpacialPartition.h">
-      <Filter>Header Files\Physics</Filter>
-    </ClInclude>
-    <ClInclude Include="Random.h">
-      <Filter>Header Files\Physics</Filter>
-    </ClInclude>
-    <ClInclude Include="State.h">
-      <Filter>Header Files\State</Filter>
-    </ClInclude>
-    <ClInclude Include="StateManager.h">
-      <Filter>Header Files\State</Filter>
-    </ClInclude>
-    <ClInclude Include="GameState.h">
-      <Filter>Header Files\State</Filter>
-    </ClInclude>
-    <ClInclude Include="MenuState.h">
-      <Filter>Header Files\State</Filter>
-    </ClInclude>
-    <ClInclude Include="Level.h">
-      <Filter>Header Files\Level</Filter>
-    </ClInclude>
-    <ClInclude Include="Tile.h">
-      <Filter>Header Files\Level</Filter>
-    </ClInclude>
-    <ClInclude Include="InitAnimations.h">
-      <Filter>Header Files\Graphics</Filter>
-    </ClInclude>
-    <ClInclude Include="VecHelper.h">
-      <Filter>Header Files\Graphics</Filter>
-    </ClInclude>
-    <ClInclude Include="TestEnemy.h">
-      <Filter>Header Files\Entities</Filter>
-    </ClInclude>
-    <ClInclude Include="ShotGun.h">
-      <Filter>Header Files\Entities\Guns</Filter>
     </ClInclude>
     <ClInclude Include="GameKeyboard.h">
       <Filter>Header Files\Input</Filter>
@@ -201,16 +78,19 @@
     <ClInclude Include="SceneManager.h">
       <Filter>Header Files\Scene</Filter>
     </ClInclude>
-    <ClInclude Include="TestSquareSprite.h">
-      <Filter>Header Files\Object\Component</Filter>
-    </ClInclude>
     <ClInclude Include="TransformComp.h">
       <Filter>Header Files\Object\Component</Filter>
     </ClInclude>
-    <ClInclude Include="TestSquare.h">
+    <ClInclude Include="RigidBody.h">
+      <Filter>Header Files\Object\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="PolygonSprite.h">
+      <Filter>Header Files\Object\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="TestPolygon.h">
       <Filter>Header Files\Object</Filter>
     </ClInclude>
-    <ClInclude Include="RigidBody.h">
+    <ClInclude Include="ComponentList.h">
       <Filter>Header Files\Object\Component</Filter>
     </ClInclude>
   </ItemGroup>
@@ -218,83 +98,8 @@
     <ClCompile Include="stdafx.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Player.cpp">
-      <Filter>Source Files\Entities</Filter>
-    </ClCompile>
-    <ClCompile Include="Entity.cpp">
-      <Filter>Source Files\Entities</Filter>
-    </ClCompile>
-    <ClCompile Include="StateManager.cpp">
-      <Filter>Source Files\State</Filter>
-    </ClCompile>
-    <ClCompile Include="State.cpp">
-      <Filter>Source Files\State</Filter>
-    </ClCompile>
-    <ClCompile Include="GameState.cpp">
-      <Filter>Source Files\State</Filter>
-    </ClCompile>
-    <ClCompile Include="MenuButton.cpp">
-      <Filter>Source Files\UserInterface</Filter>
-    </ClCompile>
-    <ClCompile Include="MenuState.cpp">
-      <Filter>Source Files\State</Filter>
-    </ClCompile>
-    <ClCompile Include="Level.cpp">
-      <Filter>Source Files\World</Filter>
-    </ClCompile>
-    <ClCompile Include="Tile.cpp">
-      <Filter>Source Files\World</Filter>
-    </ClCompile>
-    <ClCompile Include="BackgroundEngine.cpp">
-      <Filter>Source Files\Graphics</Filter>
-    </ClCompile>
-    <ClCompile Include="BackgroundLayer.cpp">
-      <Filter>Source Files\Graphics</Filter>
-    </ClCompile>
-    <ClCompile Include="Animation.cpp">
-      <Filter>Source Files\Graphics</Filter>
-    </ClCompile>
-    <ClCompile Include="InitAnimations.cpp">
-      <Filter>Source Files\Init</Filter>
-    </ClCompile>
     <ClCompile Include="Game.cpp">
       <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Animatable.cpp">
-      <Filter>Source Files\Entities</Filter>
-    </ClCompile>
-    <ClCompile Include="ProjectileBase.cpp">
-      <Filter>Source Files\Entities\Projectiles</Filter>
-    </ClCompile>
-    <ClCompile Include="GunBase.cpp">
-      <Filter>Source Files\Entities\Guns</Filter>
-    </ClCompile>
-    <ClCompile Include="BasicBullet.cpp">
-      <Filter>Source Files\Entities\Projectiles</Filter>
-    </ClCompile>
-    <ClCompile Include="BasicGun.cpp">
-      <Filter>Source Files\Entities\Guns</Filter>
-    </ClCompile>
-    <ClCompile Include="VecHelper.cpp">
-      <Filter>Source Files\Physics</Filter>
-    </ClCompile>
-    <ClCompile Include="TileMap.cpp">
-      <Filter>Source Files\Graphics</Filter>
-    </ClCompile>
-    <ClCompile Include="PhysicsEngine.cpp">
-      <Filter>Source Files\Physics</Filter>
-    </ClCompile>
-    <ClCompile Include="SpacialPartition.cpp">
-      <Filter>Source Files\Physics</Filter>
-    </ClCompile>
-    <ClCompile Include="Random.cpp">
-      <Filter>Source Files\Physics</Filter>
-    </ClCompile>
-    <ClCompile Include="TestEnemy.cpp">
-      <Filter>Source Files\Entities</Filter>
-    </ClCompile>
-    <ClCompile Include="ShotGun.cpp">
-      <Filter>Source Files\Entities\Guns</Filter>
     </ClCompile>
     <ClCompile Include="GameKeyboard.cpp">
       <Filter>Source Files\Input</Filter>
@@ -317,17 +122,17 @@
     <ClCompile Include="SceneManager.cpp">
       <Filter>Source Files\Scene</Filter>
     </ClCompile>
-    <ClCompile Include="TestSquareSprite.cpp">
-      <Filter>Source Files\Object\Component</Filter>
-    </ClCompile>
     <ClCompile Include="TransformComp.cpp">
       <Filter>Source Files\Object\Component</Filter>
     </ClCompile>
-    <ClCompile Include="TestSquare.cpp">
-      <Filter>Source Files\Object</Filter>
-    </ClCompile>
     <ClCompile Include="RigidBody.cpp">
       <Filter>Source Files\Object\Component</Filter>
+    </ClCompile>
+    <ClCompile Include="PolygonSprite.cpp">
+      <Filter>Source Files\Object\Component</Filter>
+    </ClCompile>
+    <ClCompile Include="TestPolygon.cpp">
+      <Filter>Source Files\Object</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

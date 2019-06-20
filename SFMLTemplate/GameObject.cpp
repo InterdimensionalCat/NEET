@@ -28,11 +28,3 @@ void GameObject::draw(RenderWindow* target) {
 void GameObject::addComponent(Component* comp) {
 	components.push_back(comp);
 }
-
-Component* GameObject::getComponent(string tagIn) {
-	Component* result = NULL;
-	for (auto comp : components) {
-		if (comp->tag == tagIn) result = comp;
-	}
-	return result;
-}

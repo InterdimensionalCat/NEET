@@ -43,7 +43,7 @@ struct polygon {
 	}
 };
 
-class TransformComp : Component
+class TransformComp
 {
 public:
 	TransformComp(Vector2f posIn);

@@ -29,10 +29,4 @@ void GameObject::addComponent(Component* comp) {
 	components.push_back(comp);
 }
 
-Component* GameObject::getComponent(string tagIn) {
-	Component* result = NULL;
-	for (auto comp : components) {
-		if (comp->tag == tagIn) result = comp;
-	}
-	return result;
-}
+//https://stackoverflow.com/questions/37578849/how-to-index-all-the-derived-components-in-a-base-component-list-in-entity/37580620#37580620

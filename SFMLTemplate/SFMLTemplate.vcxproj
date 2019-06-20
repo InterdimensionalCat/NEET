@@ -159,77 +159,32 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="Animatable.h" />
-    <ClInclude Include="Animation.h" />
-    <ClInclude Include="BackgroundEngine.h" />
-    <ClInclude Include="BackgroundLayer.h" />
-    <ClInclude Include="BasicBullet.h" />
-    <ClInclude Include="BasicGun.h" />
     <ClInclude Include="Component.h" />
-    <ClInclude Include="Entity.h" />
+    <ClInclude Include="ComponentList.h" />
     <ClInclude Include="GameObject.h" />
-    <ClInclude Include="GameState.h" />
-    <ClInclude Include="GunBase.h" />
-    <ClInclude Include="InitAnimations.h" />
     <ClInclude Include="GameKeyboard.h" />
-    <ClInclude Include="Level.h" />
-    <ClInclude Include="MenuButton.h" />
-    <ClInclude Include="MenuState.h" />
     <ClInclude Include="GameMouse.h" />
-    <ClInclude Include="PhysicsEngine.h" />
-    <ClInclude Include="Player.h" />
-    <ClInclude Include="ProjectileBase.h" />
-    <ClInclude Include="Random.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="RigidBody.h" />
     <ClInclude Include="Scene.h" />
     <ClInclude Include="SceneManager.h" />
-    <ClInclude Include="ShotGun.h" />
-    <ClInclude Include="SpacialPartition.h" />
-    <ClInclude Include="State.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
-    <ClInclude Include="StateManager.h" />
     <ClInclude Include="test.h" />
-    <ClInclude Include="TestEnemy.h" />
-    <ClInclude Include="TestSquare.h" />
-    <ClInclude Include="TestSquareSprite.h" />
-    <ClInclude Include="Tile.h" />
-    <ClInclude Include="TileMap.h" />
+    <ClInclude Include="TestPolygon.h" />
+    <ClInclude Include="PolygonSprite.h" />
     <ClInclude Include="TransformComp.h" />
-    <ClInclude Include="VecHelper.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Animatable.cpp" />
-    <ClCompile Include="Animation.cpp" />
-    <ClCompile Include="BackgroundEngine.cpp" />
-    <ClCompile Include="BackgroundLayer.cpp" />
-    <ClCompile Include="BasicBullet.cpp" />
-    <ClCompile Include="BasicGun.cpp" />
     <ClCompile Include="Component.cpp" />
-    <ClCompile Include="Entity.cpp" />
     <ClCompile Include="GameObject.cpp" />
-    <ClCompile Include="GameState.cpp" />
-    <ClCompile Include="GunBase.cpp" />
-    <ClCompile Include="InitAnimations.cpp" />
     <ClCompile Include="GameKeyboard.cpp" />
     <ClCompile Include="Scene.cpp" />
     <ClCompile Include="SceneManager.cpp" />
     <ClCompile Include="test.cpp" />
-    <ClCompile Include="Level.cpp" />
-    <ClCompile Include="MenuButton.cpp" />
-    <ClCompile Include="MenuState.cpp" />
     <ClCompile Include="GameMouse.cpp" />
-    <ClCompile Include="PhysicsEngine.cpp" />
-    <ClCompile Include="ProjectileBase.cpp" />
-    <ClCompile Include="Random.cpp" />
     <ClCompile Include="RigidBody.cpp" />
-    <ClCompile Include="ShotGun.cpp" />
-    <ClCompile Include="SpacialPartition.cpp" />
-    <ClCompile Include="State.cpp" />
-    <ClCompile Include="StateManager.cpp" />
-    <ClCompile Include="Player.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
@@ -237,13 +192,9 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="TestEnemy.cpp" />
-    <ClCompile Include="TestSquare.cpp" />
-    <ClCompile Include="TestSquareSprite.cpp" />
-    <ClCompile Include="Tile.cpp" />
-    <ClCompile Include="TileMap.cpp" />
+    <ClCompile Include="TestPolygon.cpp" />
+    <ClCompile Include="PolygonSprite.cpp" />
     <ClCompile Include="TransformComp.cpp" />
-    <ClCompile Include="VecHelper.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="SFMLTemplate.rc" />

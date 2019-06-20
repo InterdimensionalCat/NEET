@@ -4,8 +4,11 @@
 
 TestPolygon::TestPolygon(Vector2f position, polygon body)
 {
-	addComponent((Component*)new TransformComp(position));
-	addComponent((Component*)new PolygonSprite(Color::Red));
+	TransformComp* transform = new TransformComp(position);
+	addComponent(new PolygonSprite(Color::Red));
+	addComponent(transform);
+	init();
+
 }
 
 

@@ -3,7 +3,7 @@
 #include "stdafx.h"
 #include "TransformComp.h"
 
-class PolygonSprite
+class PolygonSprite : public Component
 {
 public:
 	PolygonSprite(Color outlineColor);
@@ -11,9 +11,9 @@ public:
 
 	void onUpdate(float deltaTime, GameMouse* mouse, GameKeyboard* keyboard);
 	void draw(RenderWindow* target);
+	void init();
 
-	polygon body;
-	Vector2f position;
 	Color color;
+	TransformComp* transform;
 };
 

@@ -26,6 +26,7 @@ void GameObject::draw(RenderWindow* target) {
 }
 
 void GameObject::addComponent(Component* comp) {
+	comp->masterObj = this;
 	components.push_back(comp);
 }
 

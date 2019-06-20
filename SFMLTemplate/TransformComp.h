@@ -7,12 +7,14 @@ struct polygon {
 	vector<Vector2f> normals;
 	polygon(vector<Vector2f> points) {
 		polygon::points = points;
+		normals = calculateNormals(points);
 	}
 	polygon() {
 		points.push_back(Vector2f(0, 0));
 		points.push_back(Vector2f(1, 0));
 		points.push_back(Vector2f(1, 1));
 		points.push_back(Vector2f(0, 1));
+		normals = calculateNormals(points);
 
 	}
 
@@ -43,14 +45,14 @@ struct polygon {
 	}
 };
 
-class TransformComp
+class TransformComp : public Component
 {
 public:
 	TransformComp(Vector2f posIn);
 	~TransformComp();
 	void move(Vector2f newPos);
 	void changeShape(vector<Vector2f> points);
-	FloatRect* getMinAABB();
+	//FloatRect* getMinAABB();
 	polygon shape;
 	Vector2f position;
 };

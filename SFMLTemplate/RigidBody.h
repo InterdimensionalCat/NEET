@@ -24,7 +24,7 @@ public:
 	float dynamicFriction;
 };
 
-class RigidBody
+class RigidBody : public Component
 {
 public:
 	RigidBody(string material);

@@ -26,3 +26,10 @@ Scene* PhysicsTest() {
 	testScene->createObject((GameObject*)new TestPolygon(Vector2f(100, 100), polygon(points)));
 	return testScene;
 }
+
+void castTest() {
+	A* atest = new B();
+	if (B* btest = dynamic_cast<B*>(atest)) {
+		cout << "success";
+	}
+}

@@ -21,4 +21,8 @@ void Component::draw(RenderWindow* target) {
 
 }
 
+void Component::init() {
+
+}
+
 

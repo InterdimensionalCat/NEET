@@ -5,8 +5,6 @@
 
 PolygonSprite::PolygonSprite(Color outlineColor) : Component("SquareSprite")
 {
-	PolygonSprite::body = body;
-	PolygonSprite::position = position;
 	color = outlineColor;
 }
 
@@ -16,22 +14,22 @@ PolygonSprite::~PolygonSprite()
 
 }
 
+void PolygonSprite::init() {
+	transform = masterObj->getComponent<TransformComp>("Transform");
+}
+
 void PolygonSprite::onUpdate(float deltaTime, GameMouse* mouse, GameKeyboard* keyboard) {
 	//update the sprite position
-	TransformComp* transform = masterObj->getComponent("Transform");
-	if (transform != NULL) {
-		body =
-	}
 
 }
 
 void PolygonSprite::draw(RenderWindow* target) {
 	ConvexShape draw;
-	draw.setPointCount(body.points.size());
-	for (int i = 0; i < body.points.size(); i++) {
-		draw.setPoint(i, body.points.at(i));
+	draw.setPointCount(transform->shape.points.size());
+	for (int i = 0; i < transform->shape.points.size(); i++) {
+		draw.setPoint(i, transform->shape.points.at(i));
 	}
-	draw.move(position);
+	draw.move(transform->position);
 	draw.setOutlineColor(color);
 	draw.setOutlineThickness(5);
 	target->draw(draw);

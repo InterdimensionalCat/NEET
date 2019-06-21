@@ -3,10 +3,15 @@
 
 int scale = 64;
 
+TransformComp::TransformComp() : Component("Transform")
+{
+	changeShape({ Vector2f(0, 0), Vector2f(1, 0), Vector2f(1, 1), Vector2f(0, 1) });
+}
+
 TransformComp::TransformComp(Vector2f posIn) : Component("Transform")
 {
 	move(posIn);
-	changeShape({ Vector2f(0, 0), Vector2f(1, 0), Vector2f(1, 1), Vector2f(0, 1)});
+	TransformComp();
 }
 
 
@@ -14,8 +19,11 @@ TransformComp::~TransformComp()
 {
 }
 
-void TransformComp::move(Vector2f newPos) {
-	position = newPos;
+void TransformComp::move(Vector2f velocity) {
+	position += velocity;
+	for (int i = 0; i < shape.points.size(); i++) {
+		shape.points[i] = shape.points[i] + velocity;
+	}
 }
 
 void TransformComp::changeShape(vector<Vector2f> points) {

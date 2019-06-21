@@ -15,7 +15,7 @@ PolygonSprite::~PolygonSprite()
 }
 
 void PolygonSprite::init() {
-	transform = masterObj->getComponent<TransformComp>("Transform");
+	transform = masterObj->getComponent<TransformComp>();
 }
 
 void PolygonSprite::onUpdate(float deltaTime, GameMouse* mouse, GameKeyboard* keyboard) {

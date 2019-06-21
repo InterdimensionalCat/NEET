@@ -166,6 +166,7 @@
     <ClInclude Include="GameObject.h" />
     <ClInclude Include="GameKeyboard.h" />
     <ClInclude Include="GameMouse.h" />
+    <ClInclude Include="PhysicsEngine.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="RigidBody.h" />
@@ -177,11 +178,13 @@
     <ClInclude Include="TestPolygon.h" />
     <ClInclude Include="PolygonSprite.h" />
     <ClInclude Include="TransformComp.h" />
+    <ClInclude Include="VecHelper.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Component.cpp" />
     <ClCompile Include="GameObject.cpp" />
     <ClCompile Include="GameKeyboard.cpp" />
+    <ClCompile Include="PhysicsEngine.cpp" />
     <ClCompile Include="Scene.cpp" />
     <ClCompile Include="SceneManager.cpp" />
     <ClCompile Include="test.cpp" />
@@ -197,6 +200,7 @@
     <ClCompile Include="TestPolygon.cpp" />
     <ClCompile Include="PolygonSprite.cpp" />
     <ClCompile Include="TransformComp.cpp" />
+    <ClCompile Include="VecHelper.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="SFMLTemplate.rc" />

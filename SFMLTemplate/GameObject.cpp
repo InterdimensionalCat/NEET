@@ -2,9 +2,11 @@
 #include "GameObject.h"
 
 
-GameObject::GameObject()
+GameObject::GameObject(Scene* master)
 {
-
+	masterScene = master;
+	transform = new TransformComp();
+	addComponent(transform);
 }
 
 

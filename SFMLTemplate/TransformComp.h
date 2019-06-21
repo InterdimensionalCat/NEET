@@ -43,12 +43,61 @@ struct polygon {
 
 		return normals;
 	}
+
+	Vector2f projectPolygon(Vector2f axis) { //to an axis
+
+		normalize(axis);
+		Vector2f range(dotProduct(axis, points[0]), dotProduct(axis, points[0])); //in the form min max
+		for (unsigned int i = 0; i < points.size(); i++) {
+			float proj = dotProduct(axis, points[i]);
+			if (proj < range.x) range.x = proj;
+			if (proj > range.y) range.y = proj;
+		}
+
+		return range;
+
+
+
+	}
+
+	//Vector2f getSupport(Vector2f axis) { //gets farthest point in an arbitrary direction
+	//	Vector2f farVert;
+	//	float farDist = -FLT_MAX;
+	//	for (auto vec : points) {
+	//		if (dotProduct(vec, axis) > farDist) {
+	//			farDist = dotProduct(vec, axis);
+	//			farVert = vec;
+	//		}
+	//	}
+
+	//	return farVert;
+
+	//}
+
+	//float LeastPenetration(int *face, polygon other) {
+	//	float penetration = -FLT_MAX;
+	//	int leastface;
+	//	for (int i = 0; i < normals.size(); i++) {
+	//		Vector2f normal = normals[i];
+	//		Vector2f support = other.getSupport(-normal);
+	//		Vector2f face = points[i];
+	//		float distance = dotProduct(normal, support - face);
+	//		if (distance > penetration) {
+	//			penetration = distance;
+	//			leastface = i;
+	//		}
+	//	}
+
+	//	*face = leastface;
+	//	return penetration;
+	//}
 };
 
 class TransformComp : public Component
 {
 public:
 	TransformComp(Vector2f posIn);
+	TransformComp();
 	~TransformComp();
 	void move(Vector2f newPos);
 	void changeShape(vector<Vector2f> points);

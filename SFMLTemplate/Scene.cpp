@@ -4,6 +4,7 @@
 
 Scene::Scene(string name)
 {
+	engine = new PhysicsEngine(this);
 }
 
 
@@ -16,6 +17,8 @@ void Scene::onUpdate(float deltaTime, GameMouse* mouse, GameKeyboard* keyboard) 
 	for (auto obj : objects) {
 		obj->onUpdate(deltaTime, mouse, keyboard);
 	}
+
+	engine->step(deltaTime);
 }
 
 void Scene::draw(RenderWindow* target) {

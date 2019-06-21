@@ -1,51 +1,37 @@
 #pragma once
 #include "stdafx.h"
-#include "Entity.h"
 #include "RigidBody.h"
-#include "Player.h"
-#include "Tile.h"
-#include "SpacialPartition.h"
 
-using namespace sf;
+class RigidBody;
 
-class bodyPair
+struct collision
 {
 public:
+	collision(RigidBody* A, RigidBody* B) {
+		collision::A = A;
+		collision::B = B;
+	}
 	RigidBody* A;
 	RigidBody* B;
 	Vector2f normal;
 	float penetration;
 };
 
-struct collPair {
-
-	RigidBody* A;
-	Tile* B;
-
-	float penetration = 0;
-	Vector2f normal = Vector2f(0, 0);
-	vector<Vector2f>* pushVectors;
-};
 
 class PhysicsEngine
 {
 public:
-	PhysicsEngine();
+	PhysicsEngine(Scene* master);
 	~PhysicsEngine();
-	vector<Entity*> queryAABB(FloatRect query, std::vector<Entity*>* entities);
-	bool queryPlayerAABB(FloatRect query, Player* player);
-	void updatePhysics(float deltaTime, std::vector<std::vector<SpacialPartition*>*>* partitions, std::vector<Entity*>* levelEntities, std::vector<Tile*>* levelTiles);
-	vector<bodyPair> Entitycollisions;
-	vector<collPair> Tilecollisions;
-
-	bool tileCollision(collPair* pair);
-
+	void addBody(RigidBody* body);
+	void step(float deltaTime);
+	void broadPhase();
+	void applyGravity();
+	bool SAT(collision* pair);
+	void resolveCollision(collision* pair);
+	void positionalCorrection(collision* pair);
+	void generateCollisions(); // BRUTE FORCE
+	Scene* masterScene;
+	vector<RigidBody*> bodies;
+	vector<collision> collisions;
 };
-
-
-void positionalCorrection(bodyPair* pair);
-void resolveCollision(bodyPair* pair);
-bool AABBCollision(bodyPair* pair);
-
-void resolveCollision(collPair* pair);
-void positionalCorrection(collPair* pair);

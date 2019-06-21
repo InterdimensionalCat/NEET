@@ -9,19 +9,22 @@ public:
 		material::restitution = restitution;
 		material::staticFriction = staticFriction;
 		material::dynamicFriction = dynamicFriction;
+		if (mass == 0) {
+			massInv = 0; //infinite mass
+		} else {
+			massInv = 1 / mass;
+		}
 	}
 
 	material() {
-		material::mass = 0.0f;
-		material::restitution = 0.0f;
-		material::staticFriction = 0.0f;
-		material::dynamicFriction = 0.0f;
+		material(0.0f, 0.0f, 0.0f, 0.0f);
 	}
 
 	float restitution;
 	float mass;
 	float staticFriction;
 	float dynamicFriction;
+	float massInv;
 };
 
 class RigidBody : public Component
@@ -29,15 +32,23 @@ class RigidBody : public Component
 public:
 	RigidBody(string material);
 	~RigidBody();
-
-	material mat;
-};
-
-material generateMaterial(string name) {
-	if (name == "test") {
-		return material(10.0f, 0.9f, 0.9f, 0.4f);
+	void setGravity(bool grav) {
+		gravity = grav;
 	}
 
-	return material(10.0f, 0.9f, 0.9f, 0.4f);
-}
+	void onUpdate(float deltaTime, GameMouse* mouse, GameKeyboard* keyboard);
+	void init();
+
+	bool gravity;
+	Vector2f velocity;
+	material mat;
+
+	material generateMaterial(string name) {
+		if (name == "test") {
+			return material(0.9f, 10.0f, 0.9f, 0.4f);
+		}
+
+		return material();
+	}
+};
 

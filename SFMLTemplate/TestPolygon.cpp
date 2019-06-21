@@ -2,11 +2,13 @@
 #include "TestPolygon.h"
 
 
-TestPolygon::TestPolygon(Vector2f position, polygon body)
+TestPolygon::TestPolygon(Vector2f position, polygon body, Scene* master) : GameObject(master)
 {
-	TransformComp* transform = new TransformComp(position);
 	addComponent(new PolygonSprite(Color::Red));
-	addComponent(transform);
+	addComponent(new RigidBody("test"));
+	transform->move(position);
+	transform->changeShape(body.points);
+	//addComponent(transform);
 	init();
 
 }

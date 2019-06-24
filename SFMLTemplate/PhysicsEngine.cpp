@@ -27,6 +27,23 @@ void PhysicsEngine::generateCollisions() {
 			collisions.push_back(collision(body1, body2));
 		}
 	}
+
+	//cull dupes
+
+	for (int i = 0; i < collisions.size() - 1; i++) {
+		for (int j = 1; j < collisions.size(); j++) {
+			if (collisions[i].A == collisions[j].B && collisions[i].B == collisions[j].A) {
+				collisions.erase(collisions.begin() + i);
+				//i--;
+				//j--;
+			}
+		}
+	}
+
+	if (collisions[0].A == collisions[collisions.size() - 1].B && collisions[0].B == collisions[collisions.size() - 1].A) {
+		collisions.erase(collisions.begin() + 0);
+	}
+
 }
 
 void PhysicsEngine::applyGravity() {
@@ -61,13 +78,9 @@ void PhysicsEngine::step(float deltaTime) {
 
 	for (auto collision : collisions) {
 		if (SAT(&collision)) {
-
-			cout << "Collision occurs" << endl;
-
 			resolveCollision(&collision);
 		}
 	}
-
 
 }
 
@@ -117,7 +130,7 @@ bool PhysicsEngine::SAT(collision* pair) {
 		}
 	}
 
-	pair->penetration *= -1.0f;
+	pair->penetration -= 0.05f;
 
 	return true;
 }
@@ -127,6 +140,18 @@ void PhysicsEngine::resolveCollision(collision* pair) {
 	RigidBody* A = pair->A;
 	RigidBody* B = pair->B;
 
+	Vector2f imp = pair->normal * pair->penetration;
+
+	if (A->mat.massInv != 0) {
+		A->velocity += imp;
+	}
+
+	if (B->mat.massInv != 0) {
+		B->velocity -= imp;
+	}
+
+	return;
+
 	// Calculate relative velocity
 	Vector2f reletiveVelocity = B->velocity - A->velocity;
 
@@ -135,26 +160,23 @@ void PhysicsEngine::resolveCollision(collision* pair) {
 	float velAlongNormal = dotProduct(reletiveVelocity, pair->normal);
 
 	// Do not resolve if velocities are separating
-	if (-velAlongNormal > 0) //should be  a >, but works with < (vel should be positive)
+	if (velAlongNormal > 0) //should be  a >, but works with < (vel should be positive)
 		return;
 
 	// Calculate restitution
 	float e = std::min(A->mat.restitution, B->mat.restitution);
 
 	// Calculate impulse scalar
-	float j = -(1 + A->mat.restitution) * velAlongNormal;
-	//float i = -(1 + B->mat.restitution) * velAlongNormal;
-	j /= A->mat.massInv + B->mat.massInv;
-	//i /= A->mat.massInv + B->mat.massInv;
+	float j = -(1 + e) * velAlongNormal;
+	j /= (A->mat.massInv + B->mat.massInv);
 
 	// Apply impulse
-	Vector2f impulse(j * pair->normal.x, j * pair->normal.y);
-	//Vector2f impulseb(i * pair->normal.x, i * pair->normal.y);
+	Vector2f impulse = pair->normal * j;
 
 	A->velocity -= A->mat.massInv * impulse;
 	B->velocity += B->mat.massInv * impulse;
 
-	//positionalCorrection(pair);
+	positionalCorrection(pair);
 
 	return;
 }
@@ -165,17 +187,8 @@ void PhysicsEngine::positionalCorrection(collision* pair) {
 	RigidBody* B = pair->B;
 	const float percent = 0.8f; // usually 20% to 80%
 	const float slop = 0.01f;// usually 0.01 to 0.1
-	float correctionFloat = std::max(pair->penetration - slop, 0.0f) / (A->mat.massInv + B->mat.massInv);
+	float correctionFloat = std::max(pair->penetration - slop, 0.0f) / (A->mat.massInv + B->mat.massInv) * percent;
 	Vector2f correction = correctionFloat * pair->normal;
-	A->masterObj->transform->move(A->mat.massInv * correction);
-	B->masterObj->transform->move(A->mat.massInv * correction);
+	A->masterObj->transform->move(-A->mat.massInv * correction);
+	B->masterObj->transform->move(B->mat.massInv * correction);
 }
-//
-//void positionalCorrection(collPair* pair) {
-//	bodyPair newPair;
-//	newPair.A = pair->A;
-//	newPair.B = (RigidBody*)pair->B;
-//	newPair.normal = pair->normal;
-//	newPair.penetration = pair->penetration;
-//	positionalCorrection(&newPair);
-//}

@@ -18,7 +18,7 @@ struct polygon {
 
 	}
 
-	//using (dy, -dx)
+	//using (dy, -dx) <- (-dy, dx)
 
 	vector<Vector2f> calculateNormals(vector<Vector2f> points) {
 		vector<Vector2f> normals;

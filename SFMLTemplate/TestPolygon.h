@@ -6,7 +6,7 @@ class TestPolygon :
 	public GameObject
 {
 public:
-	TestPolygon(Vector2f position, polygon body, Scene* master);
+	TestPolygon(Vector2f position, polygon body, Scene* master, string material);
 	~TestPolygon();
 };
 

@@ -20,6 +20,10 @@ TransformComp::~TransformComp()
 }
 
 void TransformComp::move(Vector2f velocity) {
+
+	if (velocity.x < 0.05) velocity.x = 0.0f;
+	if (velocity.y < 0.05) velocity.y = 0.0f;
+
 	position += velocity;
 	for (int i = 0; i < shape.points.size(); i++) {
 		shape.points[i] = shape.points[i] + velocity;

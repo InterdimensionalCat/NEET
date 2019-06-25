@@ -67,12 +67,7 @@ void PhysicsEngine::step(float deltaTime) {
 
 	//integrate velocity
 
-	applyGravity();
 
-	for (auto body : bodies) {
-		TransformComp* trans = body->masterObj->transform;
-		trans->move(body->velocity);
-	}
 
 	//resolve collisisons
 
@@ -81,6 +76,15 @@ void PhysicsEngine::step(float deltaTime) {
 			resolveCollision(&collision);
 		}
 	}
+
+
+	applyGravity();
+
+	for (auto body : bodies) {
+		TransformComp* trans = body->masterObj->transform;
+		trans->move(body->velocity);
+	}
+
 
 }
 

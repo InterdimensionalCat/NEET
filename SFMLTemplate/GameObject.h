@@ -2,13 +2,18 @@
 #include "Component.h"
 #include "TransformComp.h"
 #include "PolygonSprite.h"
+#include "Scene.h"
+
+class Scene;
 
 class GameObject
 {
 public:
-	GameObject();
+	GameObject(Scene* master);
 	~GameObject();
+	Scene* masterScene;
 	vector<Component*> components;
+	TransformComp* transform;
 	void onUpdate(float deltaTime, GameMouse* mouse, GameKeyboard* keyboard);
 	void draw(RenderWindow* target);
 	void addComponent(Component* comp);
@@ -22,16 +27,12 @@ public:
 
 	template <class T>
 
-	T* getComponent(string tagIn) {
-		//T* result = NULL;
+	T* getComponent() {
 		for (auto comp : components) {
-			//if (T->tag != tagIn) continue;
 			if (dynamic_cast<T*>(comp)) {
-				//return result;
 				return (T*)comp;
 			}
 		}
-		//return result;
 		return NULL;
 	}
 };

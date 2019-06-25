@@ -43,6 +43,12 @@
     <Filter Include="Header Files\Object\Component">
       <UniqueIdentifier>{f48f2c66-119d-4337-9f42-87e1f3e01790}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Physics">
+      <UniqueIdentifier>{5737b601-a0d5-4b73-ba74-ce9f30886bf1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Physics">
+      <UniqueIdentifier>{29a7986a-287e-4edc-925e-55157ca7fb1c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h">
@@ -93,6 +99,12 @@
     <ClInclude Include="ComponentList.h">
       <Filter>Header Files\Object\Component</Filter>
     </ClInclude>
+    <ClInclude Include="PhysicsEngine.h">
+      <Filter>Header Files\Physics</Filter>
+    </ClInclude>
+    <ClInclude Include="VecHelper.h">
+      <Filter>Header Files\Physics</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -133,6 +145,12 @@
     </ClCompile>
     <ClCompile Include="TestPolygon.cpp">
       <Filter>Source Files\Object</Filter>
+    </ClCompile>
+    <ClCompile Include="PhysicsEngine.cpp">
+      <Filter>Source Files\Physics</Filter>
+    </ClCompile>
+    <ClCompile Include="VecHelper.cpp">
+      <Filter>Source Files\Physics</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

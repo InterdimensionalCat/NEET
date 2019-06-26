@@ -144,6 +144,8 @@ void PhysicsEngine::resolveCollision(collision* pair) {
 	RigidBody* A = pair->A;
 	RigidBody* B = pair->B;
 
+	//git plz
+
 	Vector2f imp = pair->normal * pair->penetration;
 
 	if (A->mat.massInv != 0) {

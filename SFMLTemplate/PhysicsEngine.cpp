@@ -44,6 +44,12 @@ void PhysicsEngine::generateCollisions() {
 		collisions.erase(collisions.begin() + 0);
 	}
 
+	for (int i = 0; i < collisions.size(); i++) {
+		if (collisions[i].A->mat.mass == 0 && collisions[i].B->mat.mass == 0) {
+			collisions.erase(collisions.begin() + i);
+		}
+	}
+
 }
 
 void PhysicsEngine::applyGravity() {
@@ -67,7 +73,12 @@ void PhysicsEngine::step(float deltaTime) {
 
 	//integrate velocity
 
+	applyGravity();
 
+	for (auto body : bodies) {
+		TransformComp* trans = body->masterObj->transform;
+		trans->move(body->velocity);
+	}
 
 	//resolve collisisons
 
@@ -75,14 +86,6 @@ void PhysicsEngine::step(float deltaTime) {
 		if (SAT(&collision)) {
 			resolveCollision(&collision);
 		}
-	}
-
-
-	applyGravity();
-
-	for (auto body : bodies) {
-		TransformComp* trans = body->masterObj->transform;
-		trans->move(body->velocity);
 	}
 
 
@@ -114,6 +117,16 @@ bool PhysicsEngine::SAT(collision* pair) {
 			pair->penetration = penetration;
 			pair->normal = axis;
 		}
+		else if (penetration == pair->penetration) {
+			Vector2f reletiveVelocity = pair->B->velocity - pair->A->velocity;
+			float vel1 = dotProduct(reletiveVelocity, pair->normal);
+			float vel2 = dotProduct(reletiveVelocity, axis);
+			if (vel2 < vel1) {
+				pair->penetration = penetration;
+				pair->normal = axis;
+			}
+
+		}
 	}
 
 	for (unsigned int i = 0; i < Bnormals.size(); i++) {
@@ -132,9 +145,19 @@ bool PhysicsEngine::SAT(collision* pair) {
 			pair->penetration = penetration;
 			pair->normal = axis;
 		}
+		else if (penetration == pair->penetration) {
+			Vector2f reletiveVelocity = pair->B->velocity - pair->A->velocity;
+			float vel1 = dotProduct(reletiveVelocity, pair->normal);
+			float vel2 = dotProduct(reletiveVelocity, axis);
+			if (vel2 < vel1) {
+				pair->penetration = penetration;
+				pair->normal = axis;
+			}
+
+		}
 	}
 
-	pair->penetration -= 0.05f;
+	//pair->penetration -= 0.05f;
 
 	return true;
 }
@@ -144,19 +167,19 @@ void PhysicsEngine::resolveCollision(collision* pair) {
 	RigidBody* A = pair->A;
 	RigidBody* B = pair->B;
 
-	//git plz
+	//Vector2f imp = pair->normal * pair->penetration;
 
-	Vector2f imp = pair->normal * pair->penetration;
+	//if (A->mat.massInv != 0) {
+	//	A->velocity = imp;
+	//}
 
-	if (A->mat.massInv != 0) {
-		A->velocity += imp;
-	}
+	//if (B->mat.massInv != 0) {
+	//	B->velocity = -imp;
+	//}
 
-	if (B->mat.massInv != 0) {
-		B->velocity -= imp;
-	}
+	//cout << B->velocity.y << endl;
 
-	return;
+	//return;
 
 	// Calculate relative velocity
 	Vector2f reletiveVelocity = B->velocity - A->velocity;
@@ -184,16 +207,19 @@ void PhysicsEngine::resolveCollision(collision* pair) {
 
 	positionalCorrection(pair);
 
+	//cout << pair->penetration << endl;
+	//cout << B->mat.massInv * impulse.x << " " << B->mat.massInv * impulse.y << endl;
+
 	return;
 }
-//
-//
+
+
 void PhysicsEngine::positionalCorrection(collision* pair) {
 	RigidBody* A = pair->A;
 	RigidBody* B = pair->B;
-	const float percent = 0.8f; // usually 20% to 80%
-	const float slop = 0.01f;// usually 0.01 to 0.1
-	float correctionFloat = std::max(pair->penetration - slop, 0.0f) / (A->mat.massInv + B->mat.massInv) * percent;
+	const float percent = 1.0f; // usually 20% to 80%
+	const float slop = 0.00f;// usually 0.01 to 0.1
+	float correctionFloat = std::max(-pair->penetration - slop, 0.0f) / (A->mat.massInv + B->mat.massInv) * percent;
 	Vector2f correction = correctionFloat * pair->normal;
 	A->masterObj->transform->move(-A->mat.massInv * correction);
 	B->masterObj->transform->move(B->mat.massInv * correction);

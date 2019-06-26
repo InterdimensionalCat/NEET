@@ -31,7 +31,7 @@ struct polygon {
 			p2 = points.at(i + 1);
 			dx = p2.x - p1.x;
 			dy = p2.y - p1.y;
-			normals.push_back(Vector2f(dy, -dx));
+			normals.push_back(normalize(Vector2f(dy, -dx)));
 		}
 
 		p1 = points.at(points.size() - 1);
@@ -39,15 +39,17 @@ struct polygon {
 
 		dx = p2.x - p1.x;
 		dy = p2.y - p1.y;
-		normals.push_back(Vector2f(dy, -dx));
+		normals.push_back(normalize(Vector2f(dy, -dx)));
 
 		return normals;
 	}
 
 	Vector2f projectPolygon(Vector2f axis) { //to an axis
 
-		normalize(axis);
+		//normalize(axis);
+
 		Vector2f range(dotProduct(axis, points[0]), dotProduct(axis, points[0])); //in the form min max
+		//Vector2f range(FLT_MAX, -FLT_MAX);
 		for (unsigned int i = 0; i < points.size(); i++) {
 			float proj = dotProduct(axis, points[i]);
 			if (proj < range.x) range.x = proj;
@@ -100,7 +102,8 @@ public:
 	TransformComp();
 	~TransformComp();
 	void move(Vector2f newPos);
-	void changeShape(vector<Vector2f> points);
+	void changeShape(vector<Vector2f> points, Vector2f position);
+	void changeShape(vector<Vector2f> points, Vector2f position, Vector2f scale);
 	//FloatRect* getMinAABB();
 	polygon shape;
 	Vector2f position;

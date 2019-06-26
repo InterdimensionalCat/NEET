@@ -6,8 +6,8 @@ TestPolygon::TestPolygon(Vector2f position, polygon body, Scene* master, string 
 {
 	addComponent(new PolygonSprite(Color::Red));
 	addComponent(new RigidBody(material));
-	transform->move(position);
-	transform->changeShape(body.points);
+	transform->changeShape(body.points, position);
+	//transform->move(position);
 	//addComponent(transform);
 	init();
 

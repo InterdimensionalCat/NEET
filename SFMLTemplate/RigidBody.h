@@ -45,7 +45,7 @@ public:
 
 	material generateMaterial(string name) {
 		if (name == "test") {
-			return material(0.3f, 10.0f, 0.9f, 0.4f);
+			return material(0.3f, 1.0f, 0.9f, 0.4f);
 		}
 
 		if (name == "ground") {

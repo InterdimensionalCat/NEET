@@ -46,8 +46,10 @@ struct polygon {
 
 	Vector2f projectPolygon(Vector2f axis) { //to an axis
 
-		normalize(axis);
+		//normalize(axis);
+
 		Vector2f range(dotProduct(axis, points[0]), dotProduct(axis, points[0])); //in the form min max
+		//Vector2f range(FLT_MAX, -FLT_MAX);
 		for (unsigned int i = 0; i < points.size(); i++) {
 			float proj = dotProduct(axis, points[i]);
 			if (proj < range.x) range.x = proj;

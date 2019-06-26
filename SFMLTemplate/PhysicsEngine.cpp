@@ -44,6 +44,12 @@ void PhysicsEngine::generateCollisions() {
 		collisions.erase(collisions.begin() + 0);
 	}
 
+	for (int i = 0; i < collisions.size(); i++) {
+		if (collisions[i].A->mat.mass == 0 && collisions[i].B->mat.mass == 0) {
+			collisions.erase(collisions.begin() + i);
+		}
+	}
+
 }
 
 void PhysicsEngine::applyGravity() {
@@ -111,6 +117,16 @@ bool PhysicsEngine::SAT(collision* pair) {
 			pair->penetration = penetration;
 			pair->normal = axis;
 		}
+		else if (penetration == pair->penetration) {
+			Vector2f reletiveVelocity = pair->B->velocity - pair->A->velocity;
+			float vel1 = dotProduct(reletiveVelocity, pair->normal);
+			float vel2 = dotProduct(reletiveVelocity, axis);
+			if (vel2 < vel1) {
+				pair->penetration = penetration;
+				pair->normal = axis;
+			}
+
+		}
 	}
 
 	for (unsigned int i = 0; i < Bnormals.size(); i++) {
@@ -128,6 +144,16 @@ bool PhysicsEngine::SAT(collision* pair) {
 		if (penetration > pair->penetration) {
 			pair->penetration = penetration;
 			pair->normal = axis;
+		}
+		else if (penetration == pair->penetration) {
+			Vector2f reletiveVelocity = pair->B->velocity - pair->A->velocity;
+			float vel1 = dotProduct(reletiveVelocity, pair->normal);
+			float vel2 = dotProduct(reletiveVelocity, axis);
+			if (vel2 < vel1) {
+				pair->penetration = penetration;
+				pair->normal = axis;
+			}
+
 		}
 	}
 
@@ -181,8 +207,8 @@ void PhysicsEngine::resolveCollision(collision* pair) {
 
 	positionalCorrection(pair);
 
-	cout << pair->penetration << endl;
-	cout << B->mat.massInv * impulse.x << " " << B->mat.massInv * impulse.y << endl;
+	//cout << pair->penetration << endl;
+	//cout << B->mat.massInv * impulse.x << " " << B->mat.massInv * impulse.y << endl;
 
 	return;
 }

@@ -33,6 +33,7 @@ void TransformComp::changeShape(vector<Vector2f> points, Vector2f position) {
 	for (int i = 0; i < shape.points.size(); i++) {
 		shape.points.at(i) = ((float)scale * shape.points.at(i)) + position;
 	}
+	shape.normals = shape.calculateNormals(shape.points);
 }
 
 void TransformComp::changeShape(vector<Vector2f> points, Vector2f position, Vector2f scale) {
@@ -41,6 +42,7 @@ void TransformComp::changeShape(vector<Vector2f> points, Vector2f position, Vect
 	for (int i = 0; i < shape.points.size(); i++) {
 		shape.points.at(i) = Vector2f(scale.x * shape.points.at(i).x + position.x, scale.y * shape.points.at(i).y + position.y);
 	}
+	shape.normals = shape.calculateNormals(shape.points);
 }
 
 

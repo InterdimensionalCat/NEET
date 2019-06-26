@@ -67,7 +67,12 @@ void PhysicsEngine::step(float deltaTime) {
 
 	//integrate velocity
 
+	applyGravity();
 
+	for (auto body : bodies) {
+		TransformComp* trans = body->masterObj->transform;
+		trans->move(body->velocity);
+	}
 
 	//resolve collisisons
 
@@ -75,14 +80,6 @@ void PhysicsEngine::step(float deltaTime) {
 		if (SAT(&collision)) {
 			resolveCollision(&collision);
 		}
-	}
-
-
-	applyGravity();
-
-	for (auto body : bodies) {
-		TransformComp* trans = body->masterObj->transform;
-		trans->move(body->velocity);
 	}
 
 
@@ -134,7 +131,7 @@ bool PhysicsEngine::SAT(collision* pair) {
 		}
 	}
 
-	pair->penetration -= 0.05f;
+	//pair->penetration -= 0.05f;
 
 	return true;
 }
@@ -144,17 +141,19 @@ void PhysicsEngine::resolveCollision(collision* pair) {
 	RigidBody* A = pair->A;
 	RigidBody* B = pair->B;
 
-	Vector2f imp = pair->normal * pair->penetration;
+	//Vector2f imp = pair->normal * pair->penetration;
 
-	if (A->mat.massInv != 0) {
-		A->velocity += imp;
-	}
+	//if (A->mat.massInv != 0) {
+	//	A->velocity = imp;
+	//}
 
-	if (B->mat.massInv != 0) {
-		B->velocity -= imp;
-	}
+	//if (B->mat.massInv != 0) {
+	//	B->velocity = -imp;
+	//}
 
-	return;
+	//cout << B->velocity.y << endl;
+
+	//return;
 
 	// Calculate relative velocity
 	Vector2f reletiveVelocity = B->velocity - A->velocity;
@@ -182,16 +181,19 @@ void PhysicsEngine::resolveCollision(collision* pair) {
 
 	positionalCorrection(pair);
 
+	cout << pair->penetration << endl;
+	cout << B->mat.massInv * impulse.x << " " << B->mat.massInv * impulse.y << endl;
+
 	return;
 }
-//
-//
+
+
 void PhysicsEngine::positionalCorrection(collision* pair) {
 	RigidBody* A = pair->A;
 	RigidBody* B = pair->B;
-	const float percent = 0.8f; // usually 20% to 80%
-	const float slop = 0.01f;// usually 0.01 to 0.1
-	float correctionFloat = std::max(pair->penetration - slop, 0.0f) / (A->mat.massInv + B->mat.massInv) * percent;
+	const float percent = 1.0f; // usually 20% to 80%
+	const float slop = 0.00f;// usually 0.01 to 0.1
+	float correctionFloat = std::max(-pair->penetration - slop, 0.0f) / (A->mat.massInv + B->mat.massInv) * percent;
 	Vector2f correction = correctionFloat * pair->normal;
 	A->masterObj->transform->move(-A->mat.massInv * correction);
 	B->masterObj->transform->move(B->mat.massInv * correction);

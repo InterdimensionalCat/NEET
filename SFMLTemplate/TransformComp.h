@@ -31,7 +31,7 @@ struct polygon {
 			p2 = points.at(i + 1);
 			dx = p2.x - p1.x;
 			dy = p2.y - p1.y;
-			normals.push_back(Vector2f(dy, -dx));
+			normals.push_back(normalize(Vector2f(dy, -dx)));
 		}
 
 		p1 = points.at(points.size() - 1);
@@ -39,7 +39,7 @@ struct polygon {
 
 		dx = p2.x - p1.x;
 		dy = p2.y - p1.y;
-		normals.push_back(Vector2f(dy, -dx));
+		normals.push_back(normalize(Vector2f(dy, -dx)));
 
 		return normals;
 	}
@@ -100,7 +100,8 @@ public:
 	TransformComp();
 	~TransformComp();
 	void move(Vector2f newPos);
-	void changeShape(vector<Vector2f> points);
+	void changeShape(vector<Vector2f> points, Vector2f position);
+	void changeShape(vector<Vector2f> points, Vector2f position, Vector2f scale);
 	//FloatRect* getMinAABB();
 	polygon shape;
 	Vector2f position;

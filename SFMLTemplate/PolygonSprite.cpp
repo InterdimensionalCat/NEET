@@ -3,7 +3,7 @@
 #include "TransformComp.h"
 
 
-PolygonSprite::PolygonSprite(Color outlineColor) : Component("SquareSprite")
+PolygonSprite::PolygonSprite(Color outlineColor)
 {
 	color = outlineColor;
 }
@@ -32,11 +32,4 @@ void PolygonSprite::draw(RenderWindow* target) {
 	draw.setOutlineColor(color);
 	draw.setOutlineThickness(5);
 	target->draw(draw);
-
-	Vertex line[2];
-	line[0].position = Vector2f(0, 500);
-	line[0].color = Color();
-	line[1].position = Vector2f(1920, 500);
-	line[1].color = Color();
-	target->draw(line, 2, Lines);
 }

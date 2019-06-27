@@ -2,7 +2,7 @@
 #include "RigidBody.h"
 
 
-RigidBody::RigidBody(string material) : Component("RigidBody")
+RigidBody::RigidBody(string material)
 {
 	mat = generateMaterial(material);
 

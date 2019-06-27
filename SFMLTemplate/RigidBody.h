@@ -52,6 +52,10 @@ public:
 			return material(0.1f, 0.0f, 0.9f, 0.4f);
 		}
 
+		if (name == "player") {
+			return material(0.9f, 100.0f, 0.9f, 0.4f);
+		}
+
 		return material();
 	}
 };

@@ -31,5 +31,3 @@ void GameObject::addComponent(Component* comp) {
 	comp->masterObj = this;
 	components.push_back(comp);
 }
-
-//https://stackoverflow.com/questions/37578849/how-to-index-all-the-derived-components-in-a-base-component-list-in-entity/37580620#37580620

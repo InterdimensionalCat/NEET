@@ -2,9 +2,9 @@
 #include "Component.h"
 
 
-Component::Component(string tag)
+Component::Component()
 {
-	Component::tag = tag;
+
 }
 
 

@@ -3,7 +3,8 @@
 #include"test.h"
 #include "Scene.h"
 #include "GameObject.h"
-#include"TestPolygon.h"
+#include"ControlPoly.h"
+#include "Terrain.h"
 
 void inputTest(GameMouse* mouse, GameKeyboard* keyboard) {
 
@@ -22,25 +23,32 @@ void inputTest(GameMouse* mouse, GameKeyboard* keyboard) {
 
 Scene* PhysicsTest() {
 	Scene* testScene = new Scene("physics test");
-	vector<Vector2f> points = { Vector2f(0, 0), Vector2f(1, 0), Vector2f(1, 1), Vector2f(0, 1) };
-	testScene->createObject(new TestPolygon(Vector2f(125, 400 - 128), polygon(points), testScene, "test"));
-	/*points = { Vector2f(0, 0), Vector2f(0.5f, 0.6f), Vector2f(1, 1), Vector2f(0, 1) };
-	testScene->createObject(new TestPolygon(Vector2f(200, 200), polygon(points), testScene, "test"));*/
-	points = { Vector2f(0, 0), /*Vector2f(0.3f,0.1f),*/ Vector2f(1, 1), Vector2f(0, 1) };
-	GameObject* ground = new TestPolygon(Vector2f(100, 500), polygon(points), testScene, "ground");
-	ground->transform->changeShape(points, Vector2f(100, 400), Vector2f(500, 400));
-	RigidBody* body = ground->getComponent<RigidBody>();
-	body->setGravity(false);
-	//body->velocity += Vector2f(0, -25.0f);
-	testScene->createObject(ground);
+	//vector<Vector2f> points = { Vector2f(0, 0), Vector2f(1, 0), Vector2f(1, 1), Vector2f(0, 1) };
+	////testScene->createObject(new TestPolygon(Vector2f(125, 400 - 128), polygon(points), testScene, "test"));
+	///*points = { Vector2f(0, 0), Vector2f(0.5f, 0.6f), Vector2f(1, 1), Vector2f(0, 1) };
+	//testScene->createObject(new TestPolygon(Vector2f(200, 200), polygon(points), testScene, "test"));*/
+	//points = { Vector2f(0, 0), /*Vector2f(0.3f,0.1f),*/ Vector2f(1, 1), Vector2f(0, 1) };
+	//GameObject* ground = new TestPolygon(Vector2f(100, 500), polygon(points), testScene, "ground");
+	//ground->transform->changeShape(points, Vector2f(100, 400), Vector2f(500, 400));
+	//RigidBody* body = ground->getComponent<RigidBody>();
+	//body->setGravity(false);
+	////body->velocity += Vector2f(0, -25.0f);
+	//testScene->createObject(ground);
 
-	points = { Vector2f(0, 1), /*Vector2f(0.3f,0.1f),*/ Vector2f(1, 0), Vector2f(1, 1) };
-	GameObject* ground2 = new TestPolygon(Vector2f(100, 500), polygon(points), testScene, "ground");
-	ground2->transform->changeShape(points, Vector2f(658, 400), Vector2f(500, 400));
-	RigidBody* body2 = ground2->getComponent<RigidBody>();
-	body2->setGravity(false);
-	//body->velocity += Vector2f(0, -25.0f);
-	testScene->createObject(ground2);
+	//points = { Vector2f(0, 1), /*Vector2f(0.3f,0.1f),*/ Vector2f(1, 0), Vector2f(1, 1) };
+	//GameObject* ground2 = new TestPolygon(Vector2f(100, 500), polygon(points), testScene, "ground");
+	//ground2->transform->changeShape(points, Vector2f(658, 400), Vector2f(500, 400));
+	//RigidBody* body2 = ground2->getComponent<RigidBody>();
+	//body2->setGravity(false);
+	////body->velocity += Vector2f(0, -25.0f);
+	//testScene->createObject(ground2);
+
+
+	testScene->createObject(new ControlPoly(Vector2f(100, 100), testScene));
+	testScene->createObject(new Terrain({ Vector2f(0, 0), Vector2f(1, 0), Vector2f(1, 1), Vector2f(0, 1) }, Vector2f(0, 1080 - 300), Vector2f(1920,300), testScene));
+	testScene->createObject(new Terrain({ Vector2f(0, 0), Vector2f(1, 0), Vector2f(1, 1), Vector2f(0, 1) }, Vector2f(0, 0), Vector2f(100, 1080), testScene));
+	testScene->createObject(new Terrain({ Vector2f(0, 0), Vector2f(1, 0), Vector2f(1, 1), Vector2f(0, 1) }, Vector2f(1920 - 100, 0), Vector2f(100, 1080), testScene));
+
 	return testScene;
 }
 

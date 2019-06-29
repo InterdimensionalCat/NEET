@@ -45,9 +45,17 @@ Scene* PhysicsTest() {
 
 
 	testScene->createObject(new ControlPoly(Vector2f(100, 100), testScene));
-	testScene->createObject(new Terrain({ Vector2f(0, 0), Vector2f(1, 0), Vector2f(1, 1), Vector2f(0, 1) }, Vector2f(0, 1080 - 300), Vector2f(1920,300), testScene));
+	testScene->createObject(new Terrain({ Vector2f(0, 0),/* Vector2f(1, 0),*/ Vector2f(1, 1), Vector2f(0, 1) }, Vector2f(0, 1080 - 300), Vector2f(1920,300), testScene));
 	testScene->createObject(new Terrain({ Vector2f(0, 0), Vector2f(1, 0), Vector2f(1, 1), Vector2f(0, 1) }, Vector2f(0, 0), Vector2f(100, 1080), testScene));
 	testScene->createObject(new Terrain({ Vector2f(0, 0), Vector2f(1, 0), Vector2f(1, 1), Vector2f(0, 1) }, Vector2f(1920 - 100, 0), Vector2f(100, 1080), testScene));
+
+	TransformComp* comp = new TransformComp();
+	comp->changeShape({ Vector2f(0,0), Vector2f(0,1), Vector2f(1,1), Vector2f(1,0) }, Vector2f(100, 100), Vector2f(100, 100));
+	TransformComp* comp1 = new TransformComp();
+	comp1->changeShape({ Vector2f(0,0),  Vector2f(1,1), Vector2f(1,0) }, Vector2f(500, 500), Vector2f(100, 100));
+
+	boundTest(comp, comp1);
+
 
 	return testScene;
 }
@@ -57,4 +65,25 @@ void castTest() {
 	if (B* btest = dynamic_cast<B*>(atest)) {
 		cout << "success";
 	}
+}
+
+void signArea() {
+
+	vector<Vector2f> vec = { Vector2f(-1,-1), Vector2f(-1,1), Vector2f(1,1), };
+	float a = signedArea(vec);
+	cout << a << endl;
+}
+
+void centroidTest() {
+
+	vector<Vector2f> vec = { Vector2f(0,0), Vector2f(1,1), Vector2f(0,1), };
+	Vector2f a = centroid(vec);
+	cout << a.x << " " << a.y << endl;
+}
+
+void boundTest(TransformComp* A, TransformComp* B) {
+	A->localBounds();
+	B->localBounds();
+	A->localBounds(B->shape.points, B->position - A->position);
+	B->localBounds(A->shape.points, A->position - B->position);
 }

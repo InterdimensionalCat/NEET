@@ -1,13 +1,42 @@
 #pragma once
 #include "stdafx.h"
 
+using namespace sf;
+using namespace std;
 
 //self explanitory; adds vector math functions that SFML lacks
 //as SFML for some reason includes vectors but no vector math
 
+//2x2 matrix in this form
+// | x.x, x.y |
+// | y.x, y.y |
 
-using namespace sf;
-using namespace std;
+struct matrix {
+
+	Vector2f x;
+	Vector2f y;
+
+	matrix(Vector2f x, Vector2f y) {
+		matrix::x = x;
+		matrix::y = y;
+	}
+
+	matrix(float radian) {
+		float cos = std::cos(radian);
+		float sin = std::sin(radian);
+		x = Vector2f(cos, -sin);
+		y = Vector2f(sin, cos);
+	}
+
+	//rotate a vector
+	const Vector2f operator*(const Vector2f& vec) const
+	{
+		return Vector2f(x.x * vec.x + x.y * vec.y, y.x * vec.x + y.y * vec.y);
+	}
+};
+
+Vector2f x;
+Vector2f y;
 
 float Distance(Vector2f a, Vector2f b);
 float dotProduct(Vector2f a, Vector2f b);
@@ -32,3 +61,5 @@ bool lineSide(Vector2f point, Vector2f A, Vector2f B);
 float intervalDistance(Vector2f a, Vector2f b);
 
 Vector2f abs(Vector2f vec);
+float signedArea(vector<Vector2f> points);
+Vector2f centroid(vector<Vector2f> points);

@@ -17,16 +17,18 @@ Controller::~Controller()
 
 void Controller::onUpdate(float deltaTime, GameMouse* mouse, GameKeyboard* keyboard) {
 	if (keyboard->isKeyDown(Keyboard::D)) {
-		body->velocity += speed * Vector2f(1, 0);
+		body->force += speed * Vector2f(1, 0);
 	}
 
 	if (keyboard->isKeyDown(Keyboard::A)) {
-		body->velocity -= speed * Vector2f(1, 0);
+		body->force -= speed * Vector2f(1, 0);
 	}
 
 	if (keyboard->isKeyPressed(Keyboard::Space)) {
-		body->velocity -= jump * Vector2f(0, 1);
+		body->force -= jump * Vector2f(0, 1);
 	}
+
+	masterObj->transform->rotate(3.14159f / 16.0f);
 }
 
 

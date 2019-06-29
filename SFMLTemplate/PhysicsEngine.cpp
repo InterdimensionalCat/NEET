@@ -2,7 +2,8 @@
 #include "PhysicsEngine.h"
 
 float currentDT;
-Vector2f gravity(0.0f, -0.5f);
+//Vector2f gravity(0.0f, 0.0f);
+Vector2f gravity(0.0f, (-9.8f * 60.0f) / 1000.0f);
 
 
 PhysicsEngine::PhysicsEngine(Scene* master)
@@ -55,8 +56,17 @@ void PhysicsEngine::generateCollisions() {
 void PhysicsEngine::applyGravity() {
 	for (auto body : bodies) {
 		if (body->gravity) {
-			body->velocity -= gravity;
+			body->velocity -= gravity * body->mat.gravityScale;
 		}
+	}
+}
+
+void PhysicsEngine::integrateVelocity(float deltaTime) {
+	for (auto body : bodies) {
+		body->velocity += (body->mat.massInv * body->force) * deltaTime;
+		body->angularVelocity += (body->torque * body->mat.inertInv) * deltaTime;
+		body->masterObj->transform->move(body->velocity * deltaTime);
+		body->force = Vector2f(0, 0);
 	}
 }
 
@@ -75,15 +85,18 @@ void PhysicsEngine::step(float deltaTime) {
 
 	applyGravity();
 
-	for (auto body : bodies) {
-		TransformComp* trans = body->masterObj->transform;
-		trans->move(body->velocity);
-	}
+	//for (auto body : bodies) {
+	//	TransformComp* trans = body->masterObj->transform;
+	//	trans->move(body->velocity);
+	//}
+
+	integrateVelocity(deltaTime);
 
 	//resolve collisisons
 
 	for (auto collision : collisions) {
 		if (SAT(&collision)) {
+			//boundTest(collision.A->masterObj->transform, collision.B->masterObj->transform);
 			resolveCollision(&collision);
 		}
 	}
@@ -167,20 +180,6 @@ void PhysicsEngine::resolveCollision(collision* pair) {
 	RigidBody* A = pair->A;
 	RigidBody* B = pair->B;
 
-	//Vector2f imp = pair->normal * pair->penetration;
-
-	//if (A->mat.massInv != 0) {
-	//	A->velocity = imp;
-	//}
-
-	//if (B->mat.massInv != 0) {
-	//	B->velocity = -imp;
-	//}
-
-	//cout << B->velocity.y << endl;
-
-	//return;
-
 	// Calculate relative velocity
 	Vector2f reletiveVelocity = B->velocity - A->velocity;
 
@@ -202,13 +201,12 @@ void PhysicsEngine::resolveCollision(collision* pair) {
 	// Apply impulse
 	Vector2f impulse = pair->normal * j;
 
-	A->velocity -= A->mat.massInv * impulse;
-	B->velocity += B->mat.massInv * impulse;
+	A->force -= A->mat.massInv * impulse;
+	//A->angularVelocity += A->mat.inertInv * CrossProduct(contactVector, impulse);
+	B->force += B->mat.massInv * impulse;
 
+	applyFriction(pair, j);
 	positionalCorrection(pair);
-
-	//cout << pair->penetration << endl;
-	//cout << B->mat.massInv * impulse.x << " " << B->mat.massInv * impulse.y << endl;
 
 	return;
 }
@@ -223,4 +221,38 @@ void PhysicsEngine::positionalCorrection(collision* pair) {
 	Vector2f correction = correctionFloat * pair->normal;
 	A->masterObj->transform->move(-A->mat.massInv * correction);
 	B->masterObj->transform->move(B->mat.massInv * correction);
+}
+
+void PhysicsEngine::applyFriction(collision* pair, float j) {
+	RigidBody* A = pair->A;
+	RigidBody* B = pair->B;
+
+	// Calculate relative velocity
+	Vector2f reletiveVelocity = B->velocity - A->velocity;
+	Vector2f tangent = reletiveVelocity - dotProduct(reletiveVelocity, pair->normal) * pair->normal;
+	tangent = normalize(tangent);
+	float jt = -dotProduct(reletiveVelocity, tangent);
+	jt /= (A->mat.massInv + B->mat.massInv);
+
+	float mu = Distance(Vector2f(A->mat.staticFriction, 0), Vector2f(0, -B->mat.staticFriction));
+
+	Vector2f friction;
+
+	if (abs(jt) < j * mu) {
+		friction = jt * tangent;
+	}
+	else {
+		float dynamicFr = Distance(Vector2f(A->mat.dynamicFriction, 0), Vector2f(0, -B->mat.dynamicFriction));
+		friction = -j * tangent * dynamicFr;
+	}
+
+	//float dynamicFr = Distance(Vector2f(A->mat.dynamicFriction, 0), Vector2f(0, -B->mat.dynamicFriction));
+	//friction = -j * tangent * dynamicFr;
+
+	if (abs(friction.x) > 105 || abs(friction.y) > 105) {
+		cout << friction.x << " " << friction.y << endl;
+	}
+
+	A->force -= A->mat.massInv * friction;
+	B->force += B->mat.massInv * friction;
 }

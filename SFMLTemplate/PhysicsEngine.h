@@ -30,7 +30,9 @@ public:
 	bool SAT(collision* pair);
 	void resolveCollision(collision* pair);
 	void positionalCorrection(collision* pair);
+	void applyFriction(collision* pair, float j);
 	void generateCollisions(); // BRUTE FORCE
+	void integrateVelocity(float deltaTime);
 	Scene* masterScene;
 	vector<RigidBody*> bodies;
 	vector<collision> collisions;

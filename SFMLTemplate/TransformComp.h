@@ -55,6 +55,16 @@ struct polygon {
 
 };
 
+struct AABB {
+	AABB(Vector2f min, Vector2f max) {
+		AABB::min = min;
+		AABB::max = max;
+	}
+
+	Vector2f min;
+	Vector2f max;
+};
+
 class TransformComp : public Component
 {
 public:
@@ -64,8 +74,14 @@ public:
 	void move(Vector2f newPos);
 	void changeShape(vector<Vector2f> points, Vector2f position, Vector2f scale);
 	void changeShape(Vector2f position, Vector2f scale);
-	//FloatRect* getMinAABB();
+	void rotate(float radians);
+	AABB getMinAABB();
 	polygon shape;
 	Vector2f position;
+
+
+
+	vector<Vector2f> localBounds();
+	vector<Vector2f> localBounds(vector<Vector2f> other, Vector2f centTrans);
 };
 

@@ -136,3 +136,37 @@ bool lineSide(Vector2f point, Vector2f A, Vector2f B) {
 Vector2f abs(Vector2f vec) {
 	return Vector2f(abs(vec.x), abs(vec.y));
 }
+
+float signedArea(vector<Vector2f> points) {
+
+	float area = 0.0f;
+	int j = 1;
+	for (int i = 0; i < points.size() - 1; i++, j++) {
+		j = j % points.size();
+		area += (points[j].x - points[i].x)*(points[j].y + points[i].y);
+	}
+
+	area /= 2.0f;
+
+	return area;
+}
+
+Vector2f centroid(vector<Vector2f> points) {
+
+	float area = 0.0f;
+	float partialArea = 0.0f;
+	Vector2f centroid;
+	int j = 1;
+	for (int i = 0; i < points.size(); i++, j++) {
+		j = j % points.size();
+		partialArea = (points[i].x*points[j].y - points[j].x*points[i].y);
+		area += partialArea;
+		centroid += Vector2f(points[j].x + points[i].x, points[j].y + points[i].y) * partialArea;
+	}
+
+	area /= 2.0f;
+
+	centroid = centroid / (6.0f * area);
+
+	return centroid;
+}

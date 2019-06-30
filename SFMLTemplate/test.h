@@ -4,6 +4,7 @@
 
 void inputTest(GameMouse* mouse, GameKeyboard* keyboard);
 Scene* PhysicsTest();
+void signArea();
 
 class A {
 public:
@@ -17,3 +18,5 @@ public:
 	void doSomething() {}
 };
 void castTest();
+void centroidTest();
+void boundTest(TransformComp* A, TransformComp* B);

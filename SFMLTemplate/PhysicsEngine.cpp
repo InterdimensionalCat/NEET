@@ -111,6 +111,7 @@ bool PhysicsEngine::SAT(collision* pair) {
 	polygon B = pair->B->masterObj->transform->shape;
 	vector<Vector2f> Anormals = A.normals;
 	vector<Vector2f> Bnormals = B.normals;
+	int index;
 
 	//project both polygons onto all normals (of the terrain)
 
@@ -123,12 +124,13 @@ bool PhysicsEngine::SAT(collision* pair) {
 		//note that penetration will be negative if the shapes overlap
 
 		float penetration = intervalDistance(ARange, BRange);
-		if (penetration > 0) {
+		if (penetration >= 0) {
 			return false; //early out
 		}
 		if (penetration > pair->penetration) {
 			pair->penetration = penetration;
 			pair->normal = axis;
+			index = i;
 		}
 		else if (penetration == pair->penetration) {
 			Vector2f reletiveVelocity = pair->B->velocity - pair->A->velocity;
@@ -137,6 +139,7 @@ bool PhysicsEngine::SAT(collision* pair) {
 			if (vel2 < vel1) {
 				pair->penetration = penetration;
 				pair->normal = axis;
+				index = i;
 			}
 
 		}
@@ -151,7 +154,7 @@ bool PhysicsEngine::SAT(collision* pair) {
 		//note that penetration will be negative if the shapes overlap
 
 		float penetration = intervalDistance(ARange, BRange);
-		if (penetration > 0) {
+		if (penetration >= 0) {
 			return false; //early out
 		}
 		if (penetration > pair->penetration) {
@@ -170,11 +173,125 @@ bool PhysicsEngine::SAT(collision* pair) {
 		}
 	}
 
-	//pair->penetration -= 0.05f;
-
+	pair->penetration -= 0.05f;
 	return true;
 }
 
+bool PhysicsEngine::enhancedSAT(collision* pair) {
+	float penetration;
+	Vector2f normal;
+
+	TransformComp* A = pair->A->masterObj->transform;
+	TransformComp* B = pair->B->masterObj->transform;
+
+	// Check for a separating axis with A's face planes
+	int faceA;
+	float penetrationA = FindAxisLeastPenetration(&faceA, pair);
+	if (penetrationA >= 0.0f)
+		return false;
+
+	// Check for a separating axis with B's face planes
+	int faceB;
+	float penetrationB = FindAxisLeastPenetration(&faceB, pair);
+	if (penetrationB >= 0.0f)
+		return false;
+
+	int referenceIndex;
+	bool flip; // Always point from a to b
+
+	TransformComp* RefPoly; // Reference
+	TransformComp* IncPoly; // Incident
+
+	// Determine which shape contains reference face
+	if (biasGreaterThan(penetrationA, penetrationB))
+	{
+		RefPoly = A;
+		IncPoly = B;
+		referenceIndex = faceA;
+		flip = false;
+	}
+
+	else
+	{
+		RefPoly = B;
+		IncPoly = A;
+		referenceIndex = faceB;
+		flip = true;
+	}
+
+	// World space incident face
+	Vector2f incidentFace[2];
+	FindIncidentFace(incidentFace, &RefPoly->shape, &IncPoly->shape, referenceIndex);
+
+	// Setup reference face vertices
+	Vector2f v1 = RefPoly->shape.points[referenceIndex];
+	referenceIndex = referenceIndex + 1 == RefPoly->shape.points.size() ? 0 : referenceIndex + 1;
+	Vector2f v2 = RefPoly->shape.points[referenceIndex];
+
+	// Transform vertices to world space
+	v1 = RefPoly->u * v1 + RefPoly->position;
+	v2 = RefPoly->u * v2 + RefPoly->position;
+
+	// Calculate reference face side normal in world space
+	Vector2f sidePlaneNormal = Vector2f(v2.x - v1.x, v2.y - v1.y);
+	sidePlaneNormal = normalize(sidePlaneNormal);
+
+	// Orthogonalize
+	Vector2f refFaceNormal(sidePlaneNormal.y, -sidePlaneNormal.x);
+
+	// ax + by = c
+	// c is distance from origin
+	float refC = dotProduct(refFaceNormal, v1);
+	float negSide = -dotProduct(sidePlaneNormal, v1);
+	float posSide = dotProduct(sidePlaneNormal, v2);
+
+	// Clip incident face to reference face side planes
+	if (Clip(Vector2f(-sidePlaneNormal.x, -sidePlaneNormal.y), negSide, incidentFace) < 2)
+		return false; // Due to floating point error, possible to not have required points
+
+	if (Clip(sidePlaneNormal, posSide, incidentFace) < 2)
+		return false; // Due to floating point error, possible to not have required points
+
+				// Flip
+	normal = flip ? Vector2f(refFaceNormal.x, refFaceNormal.y) : Vector2f(-refFaceNormal.x, -refFaceNormal.y);
+	//normalize(normal);
+
+	// Keep points behind reference face
+	int cp = 0; // clipped points behind reference face
+	float separation = dotProd(refFaceNormal, incidentFace[0]) - refC;
+	if (separation <= 0.0f)
+	{
+		//m->contacts[cp] = incidentFace[0];
+		penetration = -separation;
+		++cp;
+	}
+	else {
+		penetration = 0;
+	}
+
+	separation = dotProd(refFaceNormal, incidentFace[1]) - refC;
+	if (separation <= 0.0f)
+	{
+		//m->contacts[cp] = incidentFace[1];
+
+		penetration += -separation;
+		++cp;
+
+		// Average penetration
+		penetration /= (float)cp;
+	}
+
+	//m->contact_count = cp;
+	return true;
+
+}
+
+bool PhysicsEngine::biasGreaterThan(float a, float b)
+{
+	const float k_biasRelative = 0.95f;
+	const float k_biasAbsolute = 0.01f;
+	return a >= b * k_biasRelative + a * k_biasAbsolute;
+}
 
 void PhysicsEngine::resolveCollision(collision* pair) {
 	RigidBody* A = pair->A;
@@ -255,4 +372,219 @@ void PhysicsEngine::applyFriction(collision* pair, float j) {
 
 	A->force -= A->mat.massInv * friction;
 	B->force += B->mat.massInv * friction;
+}
+
+
+
+pair<Vector2f, Vector2f> PhysicsEngine::findFeature(polygon polygon, Vector2f normal) {
+
+	float max = -FLT_MAX;
+	int index = 0;
+
+	for (int i = 0; i < polygon.points.size(); i++) {
+		float projection = dotProduct(normal, polygon.points[i]);
+		if (projection > max) {
+			max = projection;
+			index = i;
+		}
+	}
+
+	Vector2f vertex = polygon.points.at(index);
+	Vector2f v1;
+	if (index == 0) {
+		v1 = polygon.points.at(polygon.points.size() - 1);
+	}
+	else {
+		v1 = polygon.points.at(index - 1);
+	}
+
+	Vector2f v2;
+	if (index == polygon.points.size() - 1) {
+		v2 = polygon.points.at(1);
+	}
+	else {
+		v2 = polygon.points.at(index + 1);
+	}
+
+	Vector2f leftFace = normalize(vertex - v2);
+	Vector2f rightFace = normalize(vertex - v1);
+
+	if (dotProduct(normal, rightFace) >= dotProduct(normal, leftFace)) {
+		pair<Vector2f, Vector2f> rightEdge(vertex, v1);
+		return rightEdge;
+	}
+	else {
+		pair<Vector2f, Vector2f> leftEdge(vertex, v2);
+		return leftEdge;
+	}
+}
+
+vector<Vector2f> PhysicsEngine::clip(Vector2f min, Vector2f max, Vector2f normal, float offset) {
+	vector<Vector2f> clippedPoints;
+	float clip1 = dotProduct(min, normal) - offset;
+	float clip2 = dotProduct(max, normal) - offset;
+	if (clip1 >= 0) clippedPoints.push_back(min);
+	if (clip2 >= 0) clippedPoints.push_back(max);
+
+	//check opposing sides
+	if (clip1 * clip2 < 0.0) {
+		Vector2f edge = max - min;
+		float u = clip1 / (clip1 - clip2);
+		edge *= u;
+		edge += min;
+		clippedPoints.push_back(edge);
+	}
+
+	return clippedPoints;
+}
+
+vector<Vector2f> PhysicsEngine::collisionPoints(collision* pair) {
+	//routines for determining contact Points
+
+	std::pair<Vector2f, Vector2f> bestA = findFeature(pair->A->masterObj->transform->shape, pair->normal);
+	std::pair<Vector2f, Vector2f> bestB = findFeature(pair->B->masterObj->transform->shape, -pair->normal);
+
+
+	//find reference and incedent faces
+
+	std::pair<Vector2f, Vector2f> reference, incident;
+	bool flip = false;
+	if (abs(dotProduct(bestA.second - bestA.first, pair->normal)) <= abs(dotProduct(bestB.second - bestB.first, pair->normal))) {
+		reference = bestA;
+		incident = bestB;
+	}
+	else {
+		reference = bestB;
+		incident = bestA;
+		// we need to set a flag indicating that the reference
+		// and incident edge were flipped so that when we do the final
+		// clip operation, we use the right edge normal
+		flip = true;
+	}
+
+	Vector2f refv = reference.first - reference.second;
+	refv = normalize(refv);
+	float offset1 = dotProduct(refv, reference.first);
+	vector<Vector2f> clippedPoints = clip(incident.first, incident.second, refv, offset1);
+	if (clippedPoints.size() < 2) return vector<Vector2f>();
+
+	float offset2 = dotProduct(refv, reference.second);
+	vector<Vector2f> clippedPoints2 = clip(clippedPoints[0], clippedPoints[1], -refv, -offset2);
+	clippedPoints.insert(clippedPoints.end(), clippedPoints2.begin(), clippedPoints2.end());
+	if (clippedPoints.size() < 2) return vector<Vector2f>();
+
+	Vector2f refNorm = CrossProduct(reference.second - reference.first, -1.0f);
+	if (flip) refNorm *= -1.0f;
+
+	float max = std::max(dotProduct(refNorm, reference.first), dotProduct(refNorm, reference.second));
+
+	int reduce = 0;
+
+	if (dotProduct(refNorm, clippedPoints[0]) - max < 0.0f) {
+		clippedPoints.erase(clippedPoints.begin());
+		reduce++;
+	}
+	if (dotProduct(refNorm, clippedPoints[1 - reduce]) - max < 0.0f) {
+		clippedPoints.erase(clippedPoints.begin() + 1 - reduce);
+	}
+
+	return clippedPoints;
+}
+
+
+float PhysicsEngine::FindAxisLeastPenetration(int *faceIndex, collision* pair)
+{
+
+	polygon A = pair->A->masterObj->transform->shape;
+	polygon B = pair->B->masterObj->transform->shape;
+
+	float bestDistance = -FLT_MAX;
+	int bestIndex;
+
+	for (int i = 0; i < A.points.size(); ++i)
+	{
+		// Retrieve a face normal from A
+		Vector2f n = A.normals[i];
+
+		// Retrieve support point from B along -n
+		Vector2f s = B.getSupport(Vector2f(-n.x, -n.y));
+
+		// Retrieve vertex on face from A, transform into
+		// B's model space
+		Vector2f v = A.points[i];
+
+		// Compute penetration distance (in B's model space)
+		float d = dotProduct(n, Vector2f(s.x - v.x, s.y - v.y));
+
+		// Store greatest distance
+		if (d > bestDistance)
+		{
+			bestDistance = d;
+			bestIndex = i;
+		}
+	}
+
+	*faceIndex = bestIndex;
+	return bestDistance;
+}
+
+void PhysicsEngine::FindIncidentFace(Vector2f *v, polygon* RefPoly, polygon* IncPoly, int referenceIndex)
+{
+	Vector2f referenceNormal = RefPoly->normals[referenceIndex];
+
+	// Calculate normal in incident's frame of reference
+	//referenceNormal = RefPoly->u * referenceNormal; // To world space
+	//referenceNormal = IncPoly->u.Transpose() * referenceNormal; // To incident's model space
+
+	// Find most anti-normal face on incident polygon
+	int incidentFace = 0;
+	float minDot = FLT_MAX;
+	for (int i = 0; i < IncPoly->points.size(); ++i)
+	{
+		float dot = dotProduct(referenceNormal, IncPoly->normals[i]);
+		if (dot < minDot)
+		{
+			minDot = dot;
+			incidentFace = i;
+		}
+	}
+
+	// Assign face vertices for incidentFace
+	v[0] = IncPoly->points[incidentFace];// +IncPoly->body->position;
+	incidentFace = incidentFace + 1 >= IncPoly->points.size() ? 0 : incidentFace + 1;
+	v[1] = IncPoly->points[incidentFace];// +IncPoly->body->position;
+}
+
+int Clip(Vector2f n, float c, Vector2f *face)
+{
+	int sp = 0;
+	Vector2f out[2] = {
+		face[0],
+		face[1]
+	};
+
+	// Retrieve distances from each endpoint to the line
+	// d = ax + by - c
+	float d1 = dotProduct(n, face[0]) - c;
+	float d2 = dotProduct(n, face[1]) - c;
+
+	// If negative (behind plane) clip
+	if (d1 <= 0.0f) out[sp++] = face[0];
+	if (d2 <= 0.0f) out[sp++] = face[1];
+
+	// If the points are on different sides of the plane
+	if (d1 * d2 < 0.0f) // less than to ignore -0.0f
+	{
+		// Push interesection point
+		float alpha = d1 / (d1 - d2);
+		//out[sp] = face[0] + alpha * (face[1] - face[0]);
+		out[sp] = Vector2f(face[0].x + alpha * (face[1].x - face[0].x), face[0].y + alpha * (face[1].y - face[0].y));
+		++sp;
+	}
+
+	// Assign our new converted values
+	face[0] = out[0];
+	face[1] = out[1];
+
+	return sp;
 }

@@ -53,6 +53,29 @@ struct polygon {
 		return range;
 	}
 
+	// The extreme point along a direction within a polygon
+	Vector2f getSupport(const Vector2f& dir)
+	{
+		float bestProjection = -FLT_MAX;
+		Vector2f bestVertex;
+
+		normalize(dir);
+
+		for (int i = 0; i < points.size(); ++i)
+		{
+			Vector2f v = points[i];
+			float projection = dotProduct(v, dir);
+
+			if (projection > bestProjection)
+			{
+				bestVertex = v;
+				bestProjection = projection;
+			}
+		}
+
+		return bestVertex;
+	}
+
 };
 
 struct AABB {
@@ -79,7 +102,7 @@ public:
 	polygon shape;
 	Vector2f position;
 
-
+	matrix orient;
 
 	vector<Vector2f> localBounds();
 	vector<Vector2f> localBounds(vector<Vector2f> other, Vector2f centTrans);

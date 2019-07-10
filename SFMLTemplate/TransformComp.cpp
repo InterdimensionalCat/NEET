@@ -8,8 +8,9 @@ TransformComp::TransformComp()
 
 TransformComp::TransformComp(Vector2f posIn)
 {
-	move(posIn);
+	move(posIn, 0.0f);
 	TransformComp();
+	
 }
 
 
@@ -17,12 +18,17 @@ TransformComp::~TransformComp()
 {
 }
 
-void TransformComp::move(Vector2f velocity) {
+void TransformComp::move(Vector2f velocity, float angularVelocity) {
 
 	position += velocity;
+
+
 	for (int i = 0; i < shape.points.size(); i++) {
 		shape.points[i] = shape.points[i] + velocity;
+		//shape.points[i] = rotateVec(shape.points[i], angularVelocity);
 	}
+
+	rotate(-angularVelocity);
 }
 
 //this should always be called on a new transform

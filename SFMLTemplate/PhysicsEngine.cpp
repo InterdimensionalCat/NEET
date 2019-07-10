@@ -63,10 +63,24 @@ void PhysicsEngine::applyGravity() {
 
 void PhysicsEngine::integrateVelocity(float deltaTime) {
 	for (auto body : bodies) {
+
+		if (body->force.y != 0) {
+			//cout << body->force.y << endl;
+		}
+
 		body->velocity += (body->mat.massInv * body->force) * deltaTime;
-		body->angularVelocity += (body->torque * body->mat.inertInv) * deltaTime;
-		body->masterObj->transform->move(body->velocity * deltaTime);
+		body->angularVelocity += (body->torque * body->mat.inertInv);// *deltaTime;
+		body->masterObj->transform->move(body->velocity * deltaTime, body->angularVelocity);
 		body->force = Vector2f(0, 0);
+		body->torque = 0.0f;
+
+		if (body->velocity.y != 0) {
+			//cout << body->velocity.y << endl;
+		}
+
+		if (body->angularVelocity != 0) {
+			//cout << body->angularVelocity << endl;
+		}
 	}
 }
 
@@ -94,11 +108,10 @@ void PhysicsEngine::step(float deltaTime) {
 
 	//resolve collisisons
 
-	for (auto collision : collisions) {
-		if (SAT(&collision)) {
-			//boundTest(collision.A->masterObj->transform, collision.B->masterObj->transform);
-			resolveCollision(&collision);
-		}
+	for (auto col : collisions) {
+			if (SAT(&col)) {
+				resolveCollision(&col);
+			}
 	}
 
 
@@ -111,7 +124,12 @@ bool PhysicsEngine::SAT(collision* pair) {
 	polygon B = pair->B->masterObj->transform->shape;
 	vector<Vector2f> Anormals = A.normals;
 	vector<Vector2f> Bnormals = B.normals;
-	int index;
+	float penA = -FLT_MAX;
+	Vector2f normA;
+	Vector2f normB;
+	float penB = -FLT_MAX;
+	int indexA;
+	int indexB;
 
 	//project both polygons onto all normals (of the terrain)
 
@@ -127,19 +145,19 @@ bool PhysicsEngine::SAT(collision* pair) {
 		if (penetration >= 0) {
 			return false; //early out
 		}
-		if (penetration > pair->penetration) {
-			pair->penetration = penetration;
-			pair->normal = axis;
-			index = i;
+		if (penetration > penA) {
+			penA = penetration;
+			normA = axis;
+			indexA = i;
 		}
-		else if (penetration == pair->penetration) {
+		else if (penetration == penA) {
 			Vector2f reletiveVelocity = pair->B->velocity - pair->A->velocity;
-			float vel1 = dotProduct(reletiveVelocity, pair->normal);
+			float vel1 = dotProduct(reletiveVelocity, normA);
 			float vel2 = dotProduct(reletiveVelocity, axis);
 			if (vel2 < vel1) {
-				pair->penetration = penetration;
-				pair->normal = axis;
-				index = i;
+				penA = penetration;
+				normA = axis;
+				indexA = i;
 			}
 
 		}
@@ -157,22 +175,86 @@ bool PhysicsEngine::SAT(collision* pair) {
 		if (penetration >= 0) {
 			return false; //early out
 		}
-		if (penetration > pair->penetration) {
-			pair->penetration = penetration;
-			pair->normal = axis;
+		if (penetration > penB) {
+			penB = penetration;
+			normB = axis;
+			indexB = i;
 		}
-		else if (penetration == pair->penetration) {
+		else if (penetration == penB) {
 			Vector2f reletiveVelocity = pair->B->velocity - pair->A->velocity;
-			float vel1 = dotProduct(reletiveVelocity, pair->normal);
+			float vel1 = dotProduct(reletiveVelocity, normB);
 			float vel2 = dotProduct(reletiveVelocity, axis);
 			if (vel2 < vel1) {
-				pair->penetration = penetration;
-				pair->normal = axis;
+				penB = penetration;
+				normB = axis;
+				indexB = i;
 			}
 
 		}
 	}
 
+	//determine reference polygon
+
+	int refIndex;
+	bool flip;
+
+	TransformComp* reference;
+	TransformComp* incident;
+
+	if (biasGreaterThan(penA, penB))
+	{
+		reference = pair->A->masterObj->transform;
+		incident = pair->B->masterObj->transform;
+		refIndex = indexA;
+		flip = false;
+	}
+
+	else
+	{
+		reference = pair->B->masterObj->transform;
+		incident = pair->A->masterObj->transform;
+		refIndex = indexB;
+		flip = true;
+	}
+
+	Vector2f incidentFace[2];
+	FindIncidentFace(incidentFace, &reference->shape, &incident->shape, refIndex);
+
+
+	Vector2f v1 = reference->shape.points[refIndex];
+	refIndex = refIndex + 1 == reference->shape.points.size() ? 0 : refIndex + 1;
+	Vector2f v2 = reference->shape.points[refIndex];
+
+	Vector2f ref = normalize(v2 - v1);
+
+	float offset = dotProduct(ref, v1);
+	vector<Vector2f> cpoints = clip(incidentFace[0], incidentFace[1], ref, offset);
+	if (cpoints.size() < 2) return false;
+
+	float offset2 = dotProduct(ref, v2);
+	cpoints = clip(cpoints[0], cpoints[1], -ref, -offset2);
+	if (cpoints.size() < 2) return false;
+
+	Vector2f refNorm = Vector2f(-ref.y, ref.x);
+	if (flip) refNorm = refNorm * -1.0f;
+
+	float maxVal = max(dotProduct(refNorm, v1), dotProduct(refNorm, v2));
+
+	pair->contacts = cpoints;
+	pair->contactCount = (int)pair->contacts.size();
+
+	if (dotProduct(refNorm, pair->contacts[1]) - maxVal < 0.0f) {
+		pair->contacts.erase(pair->contacts.begin() + 1);
+		pair->contactCount--;
+	}
+
+	if (dotProduct(refNorm, pair->contacts[0]) - maxVal < 0.0f) {
+		pair->contacts.erase(pair->contacts.begin() + 0);
+		pair->contactCount--;
+	}
+
+	pair->normal = flip ? -refNorm : refNorm;
+	pair->penetration = max(penA, penB);
 	pair->penetration -= 0.05f;
 	return true;
 }
@@ -229,8 +311,8 @@ bool PhysicsEngine::enhancedSAT(collision* pair) {
 	Vector2f v2 = RefPoly->shape.points[referenceIndex];
 
 	// Transform vertices to world space
-	v1 = RefPoly->u * v1 + RefPoly->position;
-	v2 = RefPoly->u * v2 + RefPoly->position;
+	//v1 = RefPoly->u * v1 + RefPoly->position;
+	//v2 = RefPoly->u * v2 + RefPoly->position;
 
 	// Calculate reference face side normal in world space
 	Vector2f sidePlaneNormal = Vector2f(v2.x - v1.x, v2.y - v1.y);
@@ -258,10 +340,10 @@ bool PhysicsEngine::enhancedSAT(collision* pair) {
 
 	// Keep points behind reference face
 	int cp = 0; // clipped points behind reference face
-	float separation = dotProd(refFaceNormal, incidentFace[0]) - refC;
+	float separation = dotProduct(refFaceNormal, incidentFace[0]) - refC;
 	if (separation <= 0.0f)
 	{
-		//m->contacts[cp] = incidentFace[0];
+		pair->contacts[cp] = incidentFace[0];
 		penetration = -separation;
 		++cp;
 	}
@@ -269,10 +351,10 @@ bool PhysicsEngine::enhancedSAT(collision* pair) {
 		penetration = 0;
 	}
 
-	separation = dotProd(refFaceNormal, incidentFace[1]) - refC;
+	separation = dotProduct(refFaceNormal, incidentFace[1]) - refC;
 	if (separation <= 0.0f)
 	{
-		//m->contacts[cp] = incidentFace[1];
+		pair->contacts[cp] = incidentFace[1];
 
 		penetration += -separation;
 		++cp;
@@ -281,7 +363,11 @@ bool PhysicsEngine::enhancedSAT(collision* pair) {
 		penetration /= (float)cp;
 	}
 
-	//m->contact_count = cp;
+	//pair->penetration = penetration;
+	pair->penetration = max(penetrationA, penetrationB);
+	pair->normal = normal;
+
+	pair->contactCount = cp;
 	return true;
 
 }
@@ -329,6 +415,58 @@ void PhysicsEngine::resolveCollision(collision* pair) {
 }
 
 
+void PhysicsEngine::rotationalResolution(collision* pair) {
+	RigidBody* A = pair->A;
+	RigidBody* B = pair->B;
+
+
+	for (int i = 0; i < pair->contactCount; i++) {
+
+		Vector2f ra = pair->contacts[i] - A->masterObj->transform->position;
+		Vector2f rb = pair->contacts[i] - B->masterObj->transform->position;
+
+		// Calculate relative velocity
+		Vector2f reletiveVelocity = B->velocity + CrossProduct(B->angularVelocity, rb) - A->velocity - CrossProduct(A->angularVelocity, ra);
+
+
+		// Calculate relative velocity in terms of the normal direction
+		float velAlongNormal = dotProduct(reletiveVelocity, pair->normal);
+
+		// Do not resolve if velocities are separating
+		if (velAlongNormal > 0) //should be  a >, but works with < (vel should be positive)
+			return;
+
+		float raxn = CrossProduct(ra, pair->normal);
+		float rbxn = CrossProduct(rb, pair->normal);
+		float invMassSum = A->mat.massInv + B->mat.massInv + raxn*raxn * A->mat.inertInv + rbxn*rbxn * B->mat.inertInv;
+
+		// Calculate restitution
+		float e = std::min(A->mat.restitution, B->mat.restitution);
+
+		// Calculate impulse scalar
+		float j = -(1 + e) * velAlongNormal;
+		j /= invMassSum;
+		j /= (float)pair->contactCount;
+
+		// Apply impulse
+		Vector2f impulse = pair->normal * j;
+
+		A->force -= A->mat.massInv * impulse;
+		A->angularVelocity += A->mat.inertInv * CrossProduct(ra, impulse);
+		B->force += B->mat.massInv * impulse;
+		B->angularVelocity -= B->mat.inertInv * CrossProduct(rb, impulse);
+
+		//applyFriction(pair, j);
+	}
+	
+	cout << B->force.y << endl;
+
+	positionalCorrection(pair);
+
+	return;
+}
+
+
 void PhysicsEngine::positionalCorrection(collision* pair) {
 	RigidBody* A = pair->A;
 	RigidBody* B = pair->B;
@@ -336,8 +474,8 @@ void PhysicsEngine::positionalCorrection(collision* pair) {
 	const float slop = 0.00f;// usually 0.01 to 0.1
 	float correctionFloat = std::max(-pair->penetration - slop, 0.0f) / (A->mat.massInv + B->mat.massInv) * percent;
 	Vector2f correction = correctionFloat * pair->normal;
-	A->masterObj->transform->move(-A->mat.massInv * correction);
-	B->masterObj->transform->move(B->mat.massInv * correction);
+	A->masterObj->transform->move(-A->mat.massInv * correction, 0.0f);
+	B->masterObj->transform->move(B->mat.massInv * correction, 0.0f);
 }
 
 void PhysicsEngine::applyFriction(collision* pair, float j) {
@@ -532,10 +670,6 @@ void PhysicsEngine::FindIncidentFace(Vector2f *v, polygon* RefPoly, polygon* Inc
 {
 	Vector2f referenceNormal = RefPoly->normals[referenceIndex];
 
-	// Calculate normal in incident's frame of reference
-	//referenceNormal = RefPoly->u * referenceNormal; // To world space
-	//referenceNormal = IncPoly->u.Transpose() * referenceNormal; // To incident's model space
-
 	// Find most anti-normal face on incident polygon
 	int incidentFace = 0;
 	float minDot = FLT_MAX;
@@ -550,12 +684,12 @@ void PhysicsEngine::FindIncidentFace(Vector2f *v, polygon* RefPoly, polygon* Inc
 	}
 
 	// Assign face vertices for incidentFace
-	v[0] = IncPoly->points[incidentFace];// +IncPoly->body->position;
+	v[0] = IncPoly->points[incidentFace];
 	incidentFace = incidentFace + 1 >= IncPoly->points.size() ? 0 : incidentFace + 1;
-	v[1] = IncPoly->points[incidentFace];// +IncPoly->body->position;
+	v[1] = IncPoly->points[incidentFace];
 }
 
-int Clip(Vector2f n, float c, Vector2f *face)
+int PhysicsEngine::Clip(Vector2f n, float c, Vector2f *face)
 {
 	int sp = 0;
 	Vector2f out[2] = {
@@ -577,8 +711,8 @@ int Clip(Vector2f n, float c, Vector2f *face)
 	{
 		// Push interesection point
 		float alpha = d1 / (d1 - d2);
-		//out[sp] = face[0] + alpha * (face[1] - face[0]);
-		out[sp] = Vector2f(face[0].x + alpha * (face[1].x - face[0].x), face[0].y + alpha * (face[1].y - face[0].y));
+		out[sp] = face[0] + alpha * (face[1] - face[0]);
+		//out[sp] = Vector2f(face[0].x + alpha * (face[1].x - face[0].x), face[0].y + alpha * (face[1].y - face[0].y));
 		++sp;
 	}
 
@@ -587,4 +721,8 @@ int Clip(Vector2f n, float c, Vector2f *face)
 	face[1] = out[1];
 
 	return sp;
+}
+
+void PhysicsEngine::generateContacts(collision* pair) {
+
 }

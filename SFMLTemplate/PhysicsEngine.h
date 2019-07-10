@@ -10,12 +10,14 @@ public:
 	collision(RigidBody* A, RigidBody* B) {
 		collision::A = A;
 		collision::B = B;
+		contacts = vector<Vector2f>(2);
 	}
 	RigidBody* A;
 	RigidBody* B;
 	Vector2f normal;
 	float penetration;
-	Vector2f contacts[2];
+	vector<Vector2f> contacts;
+	int contactCount;
 };
 
 
@@ -31,6 +33,7 @@ public:
 	bool SAT(collision* pair);
 	bool enhancedSAT(collision* pair);
 	void resolveCollision(collision* pair);
+	void rotationalResolution(collision* pair);
 	void positionalCorrection(collision* pair);
 	void applyFriction(collision* pair, float j);
 	void generateCollisions(); // BRUTE FORCE
@@ -41,6 +44,8 @@ public:
 	float FindAxisLeastPenetration(int *faceIndex, collision* pair);
 	bool biasGreaterThan(float a, float b);
 	void FindIncidentFace(Vector2f *v, polygon* RefPoly, polygon* IncPoly, int referenceIndex);
+	int Clip(Vector2f n, float c, Vector2f *face);
+	void generateContacts(collision* pair);
 	Scene* masterScene;
 	vector<RigidBody*> bodies;
 	vector<collision> collisions;

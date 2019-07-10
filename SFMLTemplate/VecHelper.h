@@ -28,6 +28,10 @@ struct matrix {
 		y = Vector2f(sin, cos);
 	}
 
+	matrix() {
+		matrix(0.0f);
+	}
+
 	//rotate a vector
 	const Vector2f operator*(const Vector2f& vec) const
 	{

@@ -11,6 +11,7 @@ ControlPoly::ControlPoly(Vector2f position, Scene* master) : GameObject(master)
 	transform->changeShape(position, Vector2f(64, 64));
 	init();
 	body->calcInertia(transform, 1.0, false);
+	transform->rotate(3.14f / 4.0f);
 
 
 }

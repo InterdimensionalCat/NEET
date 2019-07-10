@@ -70,6 +70,7 @@ void PhysicsEngine::integrateVelocity(float deltaTime) {
 
 		body->velocity += (body->mat.massInv * body->force) * deltaTime;
 		body->angularVelocity += (body->torque * body->mat.inertInv);// *deltaTime;
+		//if(body->mat.inertInv != 0) body->angularVelocity = 3.14f / 12;
 		body->masterObj->transform->move(body->velocity * deltaTime, body->angularVelocity);
 		body->force = Vector2f(0, 0);
 		body->torque = 0.0f;
@@ -243,7 +244,8 @@ bool PhysicsEngine::SAT(collision* pair) {
 	Vector2f refNorm = Vector2f(ref.y, -ref.x);
 	if (flip) refNorm = refNorm * -1.0f;
 
-	float maxVal = max(dotProduct(refNorm, incidentFace[0]), dotProduct(refNorm, incidentFace[1]));
+	//float maxVal = max(dotProduct(refNorm, incidentFace[0]), dotProduct(refNorm, incidentFace[1]));
+	float maxVal = max(dotProduct(refNorm, v1), dotProduct(refNorm, v2));
 
 	pair->contacts = cpoints;
 	pair->contactCount = (int)pair->contacts.size();
@@ -318,9 +320,6 @@ bool PhysicsEngine::enhancedSAT(collision* pair) {
 	referenceIndex = referenceIndex + 1 == RefPoly->shape.points.size() ? 0 : referenceIndex + 1;
 	Vector2f v2 = RefPoly->shape.points[referenceIndex];
 
-	// Transform vertices to world space
-	//v1 = RefPoly->u * v1 + RefPoly->position;
-	//v2 = RefPoly->u * v2 + RefPoly->position;
 
 	// Calculate reference face side normal in world space
 	Vector2f sidePlaneNormal = Vector2f(v2.x - v1.x, v2.y - v1.y);
@@ -329,8 +328,6 @@ bool PhysicsEngine::enhancedSAT(collision* pair) {
 	// Orthogonalize
 	Vector2f refFaceNormal(sidePlaneNormal.y, -sidePlaneNormal.x);
 
-	// ax + by = c
-	// c is distance from origin
 	float refC = dotProduct(refFaceNormal, v1);
 	float negSide = -dotProduct(sidePlaneNormal, v1);
 	float posSide = dotProduct(sidePlaneNormal, v2);
@@ -343,11 +340,10 @@ bool PhysicsEngine::enhancedSAT(collision* pair) {
 		return false; // Due to floating point error, possible to not have required points
 
 	// Flip
-	normal = flip ? Vector2f(refFaceNormal.x, refFaceNormal.y) : Vector2f(-refFaceNormal.x, -refFaceNormal.y);
-	//normalize(normal);
+	normal = flip ? refFaceNormal : -refFaceNormal;
 
-	// Keep points behind reference face
-	int cp = 0; // clipped points behind reference face
+	
+	int cp = 0; 
 	float separation = dotProduct(refFaceNormal, incidentFace[0]) - refC;
 	if (separation <= 0.0f)
 	{
@@ -371,8 +367,8 @@ bool PhysicsEngine::enhancedSAT(collision* pair) {
 		penetration /= (float)cp;
 	}
 
-	//pair->penetration = penetration;
-	pair->penetration = max(penetrationA, penetrationB);
+	pair->penetration = penetration;
+	//pair->penetration = max(penetrationA, penetrationB);
 	pair->normal = normal;
 
 	pair->contactCount = cp;
@@ -460,9 +456,9 @@ void PhysicsEngine::rotationalResolution(collision* pair) {
 		Vector2f impulse = pair->normal * j;
 
 		A->force -= A->mat.massInv * impulse;
-		A->angularVelocity -= A->mat.inertInv * 4 * CrossProduct(ra, impulse);
+		//A->angularVelocity -= A->mat.inertInv * 4 * CrossProduct(ra, impulse);
 		B->force += B->mat.massInv * impulse;
-		B->angularVelocity += B->mat.inertInv * 4 * CrossProduct(rb, impulse);
+		//B->angularVelocity += B->mat.inertInv * 4 * CrossProduct(rb, impulse);
 
 		//applyFriction(pair, j);
 	}

@@ -9,7 +9,8 @@ public:
 
 	RigidBody* body;
 	float speed = 1.0f;
-	float jump = 25.0f;
+	//float jump = 25.0f;
+	float jump = 4.0f;
 
 	void onUpdate(float deltaTime, GameMouse* mouse, GameKeyboard* keyboard);
 	void init();

@@ -3,7 +3,7 @@
 
 float currentDT;
 //Vector2f gravity(0.0f, 0.0f);
-Vector2f gravity(0.0f, (-9.8f * 60.0f) / 1000.0f);
+Vector2f gravity(0.0f, (-9.8f * 60.0f) / 6000.0f);
 
 
 PhysicsEngine::PhysicsEngine(Scene* master)
@@ -75,12 +75,16 @@ void PhysicsEngine::integrateVelocity(float deltaTime) {
 		body->torque = 0.0f;
 
 		if (body->velocity.y != 0) {
-			//cout << body->velocity.y << endl;
+			//cout << body->velocity.x << " " << body->velocity.y << endl;
 		}
 
 		if (body->angularVelocity != 0) {
 			//cout << body->angularVelocity << endl;
 		}
+
+		//if (magnitude(body->velocity)) {
+		//	cout << body->masterObj->transform->position.x << " " << body->masterObj->transform->position.y << endl;
+		//}
 	}
 }
 
@@ -110,7 +114,8 @@ void PhysicsEngine::step(float deltaTime) {
 
 	for (auto col : collisions) {
 			if (SAT(&col)) {
-				resolveCollision(&col);
+				//resolveCollision(&col);
+				rotationalResolution(&col);
 			}
 	}
 
@@ -235,15 +240,16 @@ bool PhysicsEngine::SAT(collision* pair) {
 	cpoints = clip(cpoints[0], cpoints[1], -ref, -offset2);
 	if (cpoints.size() < 2) return false;
 
-	Vector2f refNorm = Vector2f(-ref.y, ref.x);
+	Vector2f refNorm = Vector2f(ref.y, -ref.x);
 	if (flip) refNorm = refNorm * -1.0f;
 
-	float maxVal = max(dotProduct(refNorm, v1), dotProduct(refNorm, v2));
+	float maxVal = max(dotProduct(refNorm, incidentFace[0]), dotProduct(refNorm, incidentFace[1]));
 
 	pair->contacts = cpoints;
 	pair->contactCount = (int)pair->contacts.size();
 
 	if (dotProduct(refNorm, pair->contacts[1]) - maxVal < 0.0f) {
+
 		pair->contacts.erase(pair->contacts.begin() + 1);
 		pair->contactCount--;
 	}
@@ -252,6 +258,8 @@ bool PhysicsEngine::SAT(collision* pair) {
 		pair->contacts.erase(pair->contacts.begin() + 0);
 		pair->contactCount--;
 	}
+
+	cout << pair->contactCount << endl;
 
 	pair->normal = flip ? -refNorm : refNorm;
 	pair->penetration = max(penA, penB);
@@ -334,7 +342,7 @@ bool PhysicsEngine::enhancedSAT(collision* pair) {
 	if (Clip(sidePlaneNormal, posSide, incidentFace) < 2)
 		return false; // Due to floating point error, possible to not have required points
 
-				// Flip
+	// Flip
 	normal = flip ? Vector2f(refFaceNormal.x, refFaceNormal.y) : Vector2f(-refFaceNormal.x, -refFaceNormal.y);
 	//normalize(normal);
 
@@ -452,14 +460,14 @@ void PhysicsEngine::rotationalResolution(collision* pair) {
 		Vector2f impulse = pair->normal * j;
 
 		A->force -= A->mat.massInv * impulse;
-		A->angularVelocity += A->mat.inertInv * CrossProduct(ra, impulse);
+		A->angularVelocity -= A->mat.inertInv * 4 * CrossProduct(ra, impulse);
 		B->force += B->mat.massInv * impulse;
-		B->angularVelocity -= B->mat.inertInv * CrossProduct(rb, impulse);
+		B->angularVelocity += B->mat.inertInv * 4 * CrossProduct(rb, impulse);
 
 		//applyFriction(pair, j);
 	}
 	
-	cout << B->force.y << endl;
+	//cout << B->force.y << endl;
 
 	positionalCorrection(pair);
 

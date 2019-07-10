@@ -28,7 +28,7 @@ void Controller::onUpdate(float deltaTime, GameMouse* mouse, GameKeyboard* keybo
 		body->force -= jump * Vector2f(0, 1);
 	}
 
-	masterObj->transform->rotate(3.14159f / 16.0f);
+	//masterObj->transform->rotate(3.14159f / 16.0f);
 }
 
 

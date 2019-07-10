@@ -10,6 +10,7 @@ Terrain::Terrain(vector<Vector2f> points, Vector2f position, Vector2f dimensions
 	transform->changeShape(points, position, dimensions);
 	init();
 	body->setGravity(false);
+	body->calcInertia(transform, 1.0f, true);
 }
 
 Terrain::Terrain(Vector2f position, Vector2f dimensions, Scene* master) : GameObject(master)

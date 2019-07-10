@@ -37,6 +37,7 @@ public:
 	float gravityScale;
 	float inertia;
 	float inertInv;
+	float density = 0;
 };
 
 class RigidBody : public Component
@@ -55,6 +56,7 @@ public:
 	Vector2f velocity;
 	Vector2f force;
 	material mat;
+	void calcInertia(TransformComp* comp, float density, bool immov);
 
 	//rotational
 
@@ -64,15 +66,15 @@ public:
 
 	material generateMaterial(string name) {
 		if (name == "test") {
-			return material(0.3f, 1.0f, 0.9f, 0.4f, 0.25, 1.0f);
+			return material(0.3f, 1.0f, 0.9f, 0.4f, 0.25, 10.0f);
 		}
 
 		if (name == "ground") {
-			return material(0.1f, 0.0f, 0.9f, 0.9f, 0.25, 1.0f);
+			return material(0.1f, 0.0f, 0.9f, 0.9f, 0.25, 10.0f);
 		}
 
 		if (name == "player") {
-			return material(0.9f, 100.0f, 0.9f, 0.9f, 0.25, 10.f);
+			return material(0.9f, 100.0f, 0.9f, 0.9f, 0.25, 100.0f);
 		}
 
 		return material();

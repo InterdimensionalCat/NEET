@@ -94,7 +94,7 @@ public:
 	TransformComp(Vector2f posIn);
 	TransformComp();
 	~TransformComp();
-	void move(Vector2f newPos);
+	void move(Vector2f newPos, float angularVelocity);
 	void changeShape(vector<Vector2f> points, Vector2f position, Vector2f scale);
 	void changeShape(Vector2f position, Vector2f scale);
 	void rotate(float radians);

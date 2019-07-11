@@ -35,10 +35,11 @@ void PolygonSprite::draw(RenderWindow* target) {
 
 	//target->draw(draw2);
 
+
 	ConvexShape draw;
 	draw.setPointCount(transform->shape.points.size());
 	for (int i = 0; i < transform->shape.points.size(); i++) {
-		draw.setPoint(i, transform->shape.points.at(i));
+		draw.setPoint(i, transform->orient * transform->shape.points.at(i) + transform->position);
 	}
 	draw.setOutlineColor(color);
 	draw.setOutlineThickness(5);

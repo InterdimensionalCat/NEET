@@ -8,7 +8,7 @@ class ControlPoly :
 	public GameObject
 {
 public:
-	ControlPoly(Vector2f position, Scene* master);
+	ControlPoly(Vector2f position, Scene* master, float rotation);
 	~ControlPoly();
 };
 

@@ -44,8 +44,12 @@ Scene* PhysicsTest() {
 	//testScene->createObject(ground2);
 
 
-	testScene->createObject(new ControlPoly(Vector2f(100, 100), testScene));
+	testScene->createObject(new ControlPoly(Vector2f(150, 150), testScene));
 	testScene->createObject(new Terrain({ Vector2f(0, 0),/* Vector2f(1, 0),*/ Vector2f(1, 1), Vector2f(0, 1) }, Vector2f(0, 1080 - 300), Vector2f(1920,300), testScene));
+
+	testScene->createObject(new Terrain({ Vector2f(0, 0), Vector2f(1, 0), /*Vector2f(1, 1),*/ Vector2f(0, 1) }, Vector2f(100, 0), Vector2f(1920 - 200, 100), testScene));
+
+
 	testScene->createObject(new Terrain({ Vector2f(0, 0), Vector2f(1, 0), Vector2f(1, 1), Vector2f(0, 1) }, Vector2f(0, 0), Vector2f(100, 1080), testScene));
 	testScene->createObject(new Terrain({ Vector2f(0, 0), Vector2f(1, 0), Vector2f(1, 1), Vector2f(0, 1) }, Vector2f(1920 - 100, 0), Vector2f(100, 1080), testScene));
 

@@ -19,4 +19,4 @@ public:
 };
 void castTest();
 void centroidTest();
-//void boundTest(TransformComp* A, TransformComp* B);
+void boundTest(TransformComp* A, TransformComp* B);

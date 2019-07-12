@@ -95,14 +95,16 @@ public:
 	TransformComp();
 	~TransformComp();
 	void move(Vector2f newPos, float angularVelocity);
-	void changeShape(vector<Vector2f> points, Vector2f position, Vector2f scale, float rotation);
-	void changeShape(Vector2f position, Vector2f scale, float rotation);
+	void changeShape(vector<Vector2f> points, Vector2f position, Vector2f scale);
+	void changeShape(Vector2f position, Vector2f scale);
 	void rotate(float radians);
 	AABB getMinAABB();
 	polygon shape;
 	Vector2f position;
 
-	float angle;
 	matrix orient;
+
+	vector<Vector2f> localBounds();
+	vector<Vector2f> localBounds(vector<Vector2f> other, Vector2f centTrans);
 };
 

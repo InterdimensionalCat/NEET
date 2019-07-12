@@ -114,7 +114,7 @@ void PhysicsEngine::step(float deltaTime) {
 	//resolve collisisons
 
 	for (auto col : collisions) {
-			if (SAT(&col)) {
+			if (enhancedSAT(&col)) {
 				//resolveCollision(&col);
 				rotationalResolution(&col);
 			}
@@ -367,8 +367,8 @@ bool PhysicsEngine::enhancedSAT(collision* pair) {
 		penetration /= (float)cp;
 	}
 
-	pair->penetration = penetration;
-	//pair->penetration = max(penetrationA, penetrationB);
+	//pair->penetration = penetration;
+	pair->penetration = max(penetrationA, penetrationB);
 	pair->normal = normal;
 
 	pair->contactCount = cp;
@@ -456,9 +456,9 @@ void PhysicsEngine::rotationalResolution(collision* pair) {
 		Vector2f impulse = pair->normal * j;
 
 		A->force -= A->mat.massInv * impulse;
-		//A->angularVelocity -= A->mat.inertInv * 4 * CrossProduct(ra, impulse);
+		A->angularVelocity -= A->mat.inertInv * 400 * CrossProduct(ra, impulse);
 		B->force += B->mat.massInv * impulse;
-		//B->angularVelocity += B->mat.inertInv * 4 * CrossProduct(rb, impulse);
+		B->angularVelocity += B->mat.inertInv * 400 * CrossProduct(rb, impulse);
 
 		//applyFriction(pair, j);
 	}
